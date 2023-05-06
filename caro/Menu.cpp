@@ -144,7 +144,12 @@ void Instruction()
     cout << " : BACK";
     char command = ' ';
     command = _getch();
-    ClearConsole();
+    if (command == 's' or command == 'S') {
+        ClearConsole();
+        menu();
+    }
+    
+
 }
 void About()
 {
@@ -177,7 +182,11 @@ void About()
     cout << " : BACK";
     char command = ' ';
     command = _getch();
-    ClearConsole();
+    if (command == 's' or command == 'S') {
+        ClearConsole();
+        menu();
+    }
+
 }
 void Draw(int i, int x, int y) {
     fstream file;
@@ -420,7 +429,7 @@ void menu()
                 case 2:
                 {
                     ClearConsole();
-                    //LoadLoad();
+                    LoadLoad();
                     break;
                 }
                 case 3:
@@ -442,8 +451,9 @@ void menu()
                     break;
                 }
                 case 6:
-                // Exit program
-                ch = 'x';
+                    ClearConsole();
+                    exit(0);
+                //ch = 'x';
                 break;
                 /* case 8:
                 playSound(1, 'm');
