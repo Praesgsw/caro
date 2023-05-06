@@ -43,14 +43,14 @@ void gotoXY(int x, int y)
     SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coord);
 }
 
-int playSound(int i, char c)
+void playSound(int i, char c)
 {
     static vector<const wchar_t*> soundFile{ L"beep.wav", L"move.wav",
-        L"tick.wav", L"votay.wav", L"win.wav", L"win1.wav", L"background.wav"};
+        L"tick.wav", L"votay.wav", L"win.wav", L"win1.wav", L"background.wav" };
     if (c == 77 || c == 109) {
-        return 0;
+        PlaySound(NULL, NULL, SND_PURGE);
     }
-    if (c == 78 || c == 110){
+    if (c != 77 || c != 109) {
         PlaySound(soundFile[i], NULL, SND_FILENAME | SND_ASYNC);
     }
 }
@@ -103,7 +103,8 @@ void ClearConsole() {
 void Instruction()
 {
     ClearConsole();
-    Draw(1, 50, 1);
+    system("color FA");
+    Draw(0, 1, 1);
     Textcolor(Violet);
     gotoXY(70, 18);
     cout << "Instruction";
@@ -144,49 +145,48 @@ void Instruction()
     cout << " : BACK";
     char command = ' ';
     command = _getch();
-    if (command == 's' or command == 'S') {
+    if (command == 's' || command == 'S') {
         ClearConsole();
         menu();
     }
     
-
 }
 void About()
 {
     ClearConsole();
-    Draw(0, 50, 1);
-    Textcolor(Black);
-    gotoXY(60, 18);
+    Draw(0, 1, 1);
+    Textcolor(Green);
+    gotoXY(70, 18);
     cout << "ABOUT";
-    gotoXY(50, 21);
+    gotoXY(60, 20);
     cout << "DO AN GAME CARO - LOP 22CTT4 - HCMUS\n";
-    gotoXY(50, 22);
-    cout << "GV huong dan:    Truong Toan Thinh\n";
-    gotoXY(50, 23);
-    cout << "Ho ten:          Pham Tan Nghia               MSSV   : 22120230.\n";
-    gotoXY(50, 24);
-    cout << "Ho ten:          Tran Duc Minh                MSSV   : 22120212.\n";
+    Textcolor(Black);
     gotoXY(50, 25);
-    cout << "Ho ten:          Mai Nhat Nam                 MSSV   : 22120219.\n";
-    gotoXY(50, 26);
-    cout << "Ho ten:          Hoang Thanh Thao Nguyen      MSSV   : 22120235.\n";
+    cout << "GV huong dan:    Truong Toan Thinh\n";
     gotoXY(50, 27);
-    cout << "Ho ten:          Vo Thanh Long                MSSV   : 22120195.\n";
+    cout << "Ho ten:          Pham Tan Nghia               MSSV   : 22120230.\n";
+    gotoXY(50, 28);
+    cout << "Ho ten:          Tran Duc Minh                MSSV   : 22120212.\n";
+    gotoXY(50, 29);
+    cout << "Ho ten:          Mai Nhat Nam                 MSSV   : 22120219.\n";
+    gotoXY(50, 30);
+    cout << "Ho ten:          Hoang Thanh Thao Nguyen      MSSV   : 22120235.\n";
+    gotoXY(50, 31);
+    cout << "Ho ten:          Vo Dinh Long                 MSSV   : 22120195.\n";
 
 
 
     Textcolor(Grey);
-    gotoXY(70, 30);  cout << "   S   ";
+    gotoXY(65, 35);  cout << "   S   ";
     Textcolor(Black);
-    gotoXY(110, 30);
+    gotoXY(73, 35);
     cout << " : BACK";
     char command = ' ';
     command = _getch();
-    if (command == 's' or command == 'S') {
+    if (command == 's' || command == 'S') {
         ClearConsole();
         menu();
     }
-
 }
 void Draw(int i, int x, int y) {
     fstream file;
@@ -196,7 +196,6 @@ void Draw(int i, int x, int y) {
         int j = 0;
         while (getline(file, line)) {
             gotoXY(x, y + j);
-            Textcolor(rand() % 10 + 1);
             cout << line << endl;
             j++;
         }
@@ -205,12 +204,13 @@ void Draw(int i, int x, int y) {
 }
 void History() {
     ClearConsole();
-    Draw(0, 50, 1);
+    system("color FA");
+    Draw(0, 1, 1);
     Textcolor(Green);
     gotoXY(68, 19);
     cout << "LIST FILE NAME History";
     int i = 22;
-
+    Textcolor(Black);
     fstream f;
     f.open("History.txt", ios::in);
     string line;
@@ -223,11 +223,11 @@ void History() {
         s1 = line.substr(0, pos);
         line.erase(0, pos);
         buffer = line;
-        gotoXY(50, i);
+        gotoXY(60, i);
         cout << s << " " << s1 << setw(50) << left << buffer;
         i++;
     }
-   
+
     int y = 31;
     f.close();
     Textcolor(Grey);
@@ -284,14 +284,15 @@ int ReadChedo(char a[30])
 }
 void ReadNameFile()
 {
-    Textcolor(Black);
-    gotoXY(60, 18);
+    Textcolor(Red);
+    gotoXY(65, 18);
     cout << "LIST FILE NAME";
     int i = 19;
     ifstream f;
     f.open("Name.txt", ios::in);
     while (!f.eof())
     {
+        Textcolor(Black);
         char s[30];
         f >> s;
         gotoXY(50, i);
@@ -305,11 +306,12 @@ void LoadLoad()
 {
     int n = 100;
     ClearConsole();
-    Draw(0, 50, 1);
+    Draw(0, 1, 1);
     ReadNameFile();
     char data[30];
-    gotoXY(50, 32);
+    gotoXY(55, 32);
     HienTroChuot();
+    Textcolor(Red);
     cout << "ENTER FILE NAME: ";
     cin.getline(data, 30);
     int chedo = ReadChedo(data);
@@ -341,24 +343,27 @@ void LoadLoad()
 }
 void menu()
 {
+    system("color FA");
     setConsoleTitle();
     char s[30];
-    int x = 50;
-    int y = 20;
+    int x = 65;
+    int y = 19;
     // Initial menu setup
-    Draw(0, x, y-19);
+    Draw(0, 1, y - 19);
     for (int i = 0; i < numItems; i++)
     {
+        Textcolor(Black);
         gotoXY(x, y + i);
         cout << menuItems[i];
     }
 
     // Additional menu setup
-    gotoXY(x, y + numItems + 2);
+    Textcolor(Black);
+    gotoXY(x - 10, y + numItems + 6);
     cout << "W - S : Move ( Off Unikey - Off Caps Lock ) ";
-    gotoXY(x, y + numItems + 3);
+    gotoXY(x, y + numItems + 7);
     cout << "Enter : Select ";
-    gotoXY(x, y + numItems + 5);
+    gotoXY(x + 5, y + numItems + 9);
     cout << "M: mute";
 
     char ch = ' '; // Initialize character input variable
@@ -371,13 +376,9 @@ void menu()
         input = getConsoleInput(); // Get keyboard input
 
         // Clear current selection
-        Textcolor(15);
+        Textcolor(Black);
         gotoXY(x, y + currentSelection);
         cout << menuItems[currentSelection];
-        if (input == 9 || ch == 'n')
-        {
-            playSound(6, 'n');
-         }
         if (input == 5 || ch == 's')
         {
             // Move down one row
@@ -388,7 +389,7 @@ void menu()
             // Move up one row
             currentSelection = (currentSelection - 1 + numItems) % numItems;
         }
-        else if (input == 8 || ch == 'm') 
+        else if (input == 8 || ch == 'm')
         {
             playSound(0, 'm');
         }
@@ -411,61 +412,64 @@ void menu()
                 }
                 break;
             }
-                case 1:
+            case 1:
+            {
+                ClearConsole();
+                Diem a;
+                a.score1 = 0;
+                a.score2 = 0;
+                int t = PlayerVsCom(a, 0, s);
+                if (t == 27)
                 {
-                    ClearConsole();
-                    Diem a;
-                    a.score1 = 0;
-                    a.score2 = 0;
-                    int t = PlayerVsCom(a, 0, s);
-                    if (t == 27)
-                    {
 
-                        system("cls");
-                        menu();
-                    }
-                    break;
+                    system("cls");
+                    menu();
                 }
-                case 2:
-                {
-                    ClearConsole();
-                    LoadLoad();
-                    break;
-                }
-                case 3:
-                {
-                    ClearConsole();
-                    History();
-                    break;
-                }
-                case 4:
-                {
-                    ClearConsole();
-                    Instruction();
-                    break;
-                }
-                case 5:
-                {
-                    ClearConsole();
-                    About();
-                    break;
-                }
-                case 6:
-                    ClearConsole();
-                    exit(0);
+                break;
+            }
+            case 2:
+            {
+                ClearConsole();
+                LoadLoad();
+                break;
+            }
+            case 3:
+            {
+                ClearConsole();
+                History();
+                break;
+            }
+            case 4:
+            {
+                ClearConsole();
+                Instruction();
+                break;
+            }
+            case 5:
+            {
+                ClearConsole();
+                About();
+                break;
+            }
+            case 6:
+            {
+                ClearConsole();
+                exit(0);
+                // Exit program
                 //ch = 'x';
                 break;
+            }
                 /* case 8:
                 playSound(1, 'm');
                 break;
                 case 9:
                 playSound(6);
                 break;*/
-             }
+            }
         }
 
         // Highlight new selection
-        Textcolor(12);
+        Textcolor(Red);
         gotoXY(x, y + currentSelection);
         cout << menuItems[currentSelection];
         Textcolor(15);
