@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 #include <iostream>
 #include <Windows.h>
 #include <conio.h>
@@ -38,13 +38,12 @@ static int currentSelection = 0;
 
 //Dinh nghia file ve
 static string file_name[] = { "Caro.txt", "P1.txt", "P2.txt", "Draw.txt" };
-
 void HienTroChuot();
 void AnTroChuot();
 void SetConsole(int width, int height);
 void Textcolor(int color);
 void gotoXY(int x, int y);
-int playSound(int i, char c = 'o');
+void playSound(int i, char c);
 int getConsoleInput();
 void menu();
 void Draw(int i, int x, int y);  // ve file ten gi va vi tri x y de in
@@ -57,3 +56,4 @@ void ReadNameFile(); //Hiển thị các người dùng đã lưu
 void LoadLoad(); // Mở file người chơi đã lưu
 void Instruction(); //Mục Giới thiệu
 void History(); //Mục history
+
