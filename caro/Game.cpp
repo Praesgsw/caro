@@ -1,148 +1,156 @@
 #include "Game.h"
 #include "Menu.h"
 #include "Board.h"
-int _Point::getX()
-{
-    return _x;
+
+template <class T>
+void setCountXY(T* _b) {
+    _b->CountX = 0;
+    _b->CountY = 0;
 }
-int _Point::getY()
+int getX(int x)
 {
-    return _y;
+    return point->_x;
 }
-int _Point::getCheck()
+int getY(int y)
 {
-    return _check;
+    return point->_y;
 }
-void _Point::setX(int pX)
+int getCheck(int check)
 {
-    _x = pX;
+    return point->_check;
 }
-void _Point::setY(int pY)
+void setX(int pX)
 {
-    _y = pY;
+    point->_x = pX;
 }
-bool _Point::setCheck(int pCheck)
+void setY(int pY)
+{
+    point->_y = pY;
+}
+bool setCheck(int pCheck)
 {
     if (pCheck == -1 || pCheck == 1 || pCheck == 0)
     {
-        _check = pCheck;
+        point->_check = pCheck;
         return true;
     }
     return false;
 }
-_Point::_Point()
+void startPoint()
 {
-    _x = 0;
-    _y = 0;
-    _check = 0;
+    point->_x = 0;
+    point->_y = 0;
+    point->_check = 0;
 }
-_Point::_Point(int x, int y)
+void setPoint(int x, int y)
 {
-    _x = x;
-    _y = y;
-    _check = 0;
-}
-_Point::~_Point()
-{
+    point->_x = x;
+    point->_y = y;
+    point->_check = 0;
 }
 
 vector<_Point> win;
-int _Board::getSize() { return _size; }
-int _Board::getLeft() { return _left; }
-int _Board::getTop() { return _top; }
-int _Board::getXAt(int i, int j)
+template <class T>
+int getSize(T *_b) { return _b->_size; }
+template <class T>
+int getLeft(T* _b) { return _b->_left; }
+template <class T>
+int getTop(T* _b) { return _b->_top; }
+int getXAt(int i, int j)
 {
-    return _pArr[i][j].getX();
+    return getX(_pArr[i][j]._x);
 }
-int _Board::getYAt(int i, int j)
+int getYAt(int i, int j)
 {
-    return _pArr[i][j].getY();
+    return getY(_pArr[i][j]._y);
 }
-_Board::_Board()
+void delete_Board()
 {
-    for (int i = 0; i < _size; i++)
+    for (int i = 0; i < _b->_size; i++)
     {
         delete[] _pArr[i];
     }
     delete[] _pArr;
 }
-_Board::_Board(int pSize, int pX, int pY)
+void setBoard(int pSize, int pX, int pY)
 {
-    _size = pSize;
-    _left = pX;
-    _top = pY;
+    _b->_size = pSize;
+    _b->_left = pX;
+    _b->_top = pY;
     _pArr = new _Point * [pSize];
     for (int i = 0; i < pSize; i++)
     {
         _pArr[i] = new _Point[pSize];
     }
 }
-void _Board::loadData(int i, int j, int k)
+// sửa tới đây 11:00 06/05/2023
+// chưa sửa cần mới xóa các đối tượng thôi 
+void loadData(int i, int j, int k)
 {
-    if (_size == 0)
+    if (_b->_size == 0)
         return;
     //Gán tọa độ x trong bàn cờ thành giá trị của [i] trong mảng 2 chiều.
-    _pArr[i][j].setX(4 * j + _left + 2);
+    setX(_pArr[i][j]._x = 4 * j + _b->_left + 2);
     //Gán tọa độ y trong bàn cờ thành giá trị của [j] trong mảng 2 chiều.
-    _pArr[i][j].setY(2 * i + _top + 1);
+    setY(_pArr[i][j]._y = 2 * i + _b->_top + 1);
     //Gán trạng thái của ô trong bàn cờ (X, O, ô trống) vào các phần tử trong mảng.
-    _pArr[i][j].setCheck(k);
+    setCheck(_pArr[i][j]._check = k);
     //Nếu trạng thái ô là quân X, ghi quân X ra màn hình, đếm số quân X tăng lên 1.
     if (k == -1)
     {
         Textcolor(Blue); // X
-        gotoXY(4 * j + _left + 2, 2 * i + _top + 1);
+        gotoXY(4 * j + _b->_left + 2, 2 * i + _b->_top + 1);
         cout << "X";
-        CountX++;
+        _b->CountX++;
     }
     //Nếu trạng thái ô là quân O, ghi quân O ra màn hình, đếm số quân O tăng lên 1.
     if (k == 1)
     {
         Textcolor(Red); // O
-        gotoXY(4 * j + _left + 2, 2 * i + _top + 1);
+        gotoXY(4 * j + _b->_left + 2, 2 * i + _b->_top + 1);
         cout << "O";
-        CountY++;
+        _b->CountY++;
     }
 }
 
-void _Board::resetData()
+void resetData()
 {
-    if (_size == 0)
+    if (_b->_size == 0)
         return;
-    for (int i = 0; i < _size; i++)
+    for (int i = 0; i < _b->_size; i++)
     {
-        for (int j = 0; j < _size; j++)
+        for (int j = 0; j < _b->_size; j++)
         {
-            _pArr[i][j].setX(4 * j + _left + 2);
-            _pArr[i][j].setY(2 * i + _top + 1);
+            setX(_pArr[i][j]._x = 4 * j + _b->_left + 2);
+            setY(_pArr[i][j]._y = 2 * i + _b->_top + 1);
             //Gán tất cả các ô trong bàn cờ ở trạng thái ô trống -> Reset lại bàn cờ.
-            _pArr[i][j].setCheck(0);
+            setCheck(_pArr[i][j]._check = 0);
         }
     }
 }
 
-int _Board::checkBoard(int pX, int pY, bool pTurn) // chế độ chơi 0: Player - 1: Bot
+int checkBoard(int pX, int pY, bool pTurn) // chế độ chơi 0: Player - 1: Bot
 {
-    for (int i = 0; i < _size; i++)
+    for (int i = 0; i < _b->_size; i++)
     {
-        for (int j = 0; j < _size; j++)
+        for (int j = 0; j < _b->_size; j++)
         {
-            if (_pArr[i][j].getX() == pX && _pArr[i][j].getY() == pY && _pArr[i][j].getCheck() == 0)
+            if (getX(_pArr[i][j]._x) == pX && getY(_pArr[i][j]._y) == pY && getCheck(_pArr[i][j]._check) == 0)
             {
                 //Nếu là chế độ PVP -> Người chơi X đánh trước.
                 if (pTurn)
                 {
-                    _pArr[i][j].setCheck(-1);
-                    CountX++;
+                    setCheck(_pArr[i][j]._check = -1);
+                    _b->CountX++;
                 }
                 //Nếu la chế độ PVE (Bot) -> Máy (O) đánh trước.
                 else
                 {
-                    _pArr[i][j].setCheck(1);
-                    CountY++;
+                    setCheck(_pArr[i][j]._check = 1);
+                    _b->CountY++;
                 }
                 //Trả về kết quả xem ai đánh trước (X hay O)
-                return _pArr[i][j].getCheck();
+                return getCheck(_pArr[i][j]._check);
             }
         }
     }
@@ -150,20 +158,20 @@ int _Board::checkBoard(int pX, int pY, bool pTurn) // chế độ chơi 0: Playe
 }
 
 //Hàm xét chiến thắng của X (hoặc O) theo hàng 
-int _Board::checkWinRow(int x, int y, int value)
+int checkWinRow(int x, int y, int value)
 {
     int dong, cot;
     int loop = 1;
     int test = -1;
     int check2dau = 0;
     int countRowLeft = 0, countRowRight = 0;
-    dong = (x - _left - 2) / 4;
-    cot = (y - _top - 1) / 2;
+    dong = (x - _b->_left - 2) / 4;
+    cot = (y - _b->_top - 1) / 2;
     int dongtrai, dongphai; // Xét đếm X (hoặc O) về phía trái và về phía phải.
     dongtrai = dongphai = dong;
     //Xét về phía trái ô đang xét.
     //Nếu ngay tại vị trí đang xét là X (hoặc O) thì
-    while (_pArr[cot][dongtrai].getCheck() == value)
+    while (getCheck(_pArr[cot][dongtrai]._check) == value)
     {
         //Giá trị của countRowLeft++;
         win.push_back(_pArr[cot][dongtrai]);
@@ -176,20 +184,20 @@ int _Board::checkWinRow(int x, int y, int value)
     }
     //Xét về phía phải ô đang xét.
     //Nếu ngay vị trí đang xét là X (hoặc O) thì
-    while (_pArr[cot][dongphai].getCheck() == value)
+    while (getCheck(_pArr[cot][dongtrai]._check) == value)
     {
         //Giá trị của countRowRight++;
         win.push_back(_pArr[cot][dongphai]);
         countRowRight++;
         //Nếu (dongphai == _size - 1), đây là ô sát phía bên phải của bàn cờ, không thể di chuyển sang phải được nữa -> Thoát khỏi vòng lặp.
-        if (dongphai == _size - 1)
+        if (dongphai == _b->_size - 1)
             break;
         dongphai++;
     }
     //Đây là trường hợp xét chặn 2 đầu.
     //Nếu ở 2 đầu những ô theo hàng mà ta đang xét là O (hoặc X) thì luật chặn 2 đầu được áp dụng.
     //Nếu ở 2 đầu những ô theo hàng mà ta đang xét chỉ có 1 quân O (hoặc X), đầu còn lại là ô trống thì luật 2 đầu không được áp dụng.
-    if (_pArr[cot][dongtrai].getCheck() == -value && _pArr[cot][dongphai].getCheck() == -value)
+    if (getCheck(_pArr[cot][dongtrai]._check) == -value && getCheck(_pArr[cot][dongtrai]._check) == -value)
         check2dau = 1;
     //Nếu có 5 quân X (hoặc O) liên tiếp gần nhau và luật chặn 2 đầu không được áp dụng thì trả về test=1 -> Chiến thắng
     if ((countRowLeft + countRowRight - 1) == 5 && (check2dau == 0))
@@ -210,8 +218,8 @@ int _Board::checkWinRow(int x, int y, int value)
             Textcolor(rand() % 15 + 1);
             for (int i = 0; i < win.size(); i++)
             {
-                gotoXY(win[i].getX(), win[i].getY());
-                if (win[i].getCheck() == -1)
+                gotoXY(getX(win[i]._x), getY(win[i]._y));
+                if (getCheck(win[i]._check) == -1)
                     cout << "X";
                 else
                     cout << "O";
@@ -224,19 +232,19 @@ int _Board::checkWinRow(int x, int y, int value)
         win.clear();
     return test;
 }
-int _Board::checkWinCol(int x, int y, int value) // Xet chien thang theo hang doc
+int checkWinCol(int x, int y, int value) // Xet chien thang theo hang doc
 {
     int dong, cot;
     int test = -1, loop = 1;
     int check2dau = 0;
     int countColTop = 0, countColBot = 0;
-    dong = (x - _left - 2) / 4;
-    cot = (y - _top - 1) / 2;
+    dong = (x - _b->_left - 2) / 4;
+    cot = (y - _b->_top - 1) / 2;
     int cottren, cotduoi; // Xet bien dem ve phia tren, va ve phia duoi
     cottren = cotduoi = cot;
     // Xet chien thang
     // Xet hang doc
-    while (_pArr[cottren][dong].getCheck() == value)
+    while (getCheck(_pArr[cottren][dong]._check) == value)
     {
         countColTop++;
         win.push_back(_pArr[cottren][dong]);
@@ -244,15 +252,15 @@ int _Board::checkWinCol(int x, int y, int value) // Xet chien thang theo hang do
             break;
         cottren--;
     }
-    while (_pArr[cotduoi][dong].getCheck() == value)
+    while (getCheck(_pArr[cotduoi][dong]._check) == value)
     {
         countColBot++;
         win.push_back(_pArr[cotduoi][dong]);
-        if (cotduoi == _size - 1)
+        if (cotduoi == _b->_size - 1)
             break;
         cotduoi++;
     }
-    if (_pArr[cottren][dong].getCheck() == -value && _pArr[cotduoi][dong].getCheck() == -value)
+    if (getCheck(_pArr[cottren][dong]._check) == -value && getCheck(_pArr[cotduoi][dong]._check) == -value)
         check2dau = 1;
     if ((countColTop + countColBot - 1) == 5 && (check2dau == 0))
     {
@@ -268,8 +276,8 @@ int _Board::checkWinCol(int x, int y, int value) // Xet chien thang theo hang do
             Textcolor(rand() % 15 + 1);
             for (int i = 0; i < win.size(); i++)
             {
-                gotoXY(win[i].getX(), win[i].getY());
-                if (win[i].getCheck() == -1)
+                gotoXY(getX(win[i]._x), getY(win[i]._y));
+                if (getCheck(win[i]._check) == -1)
                     cout << "X";
                 else
                     cout << "O";
@@ -282,21 +290,21 @@ int _Board::checkWinCol(int x, int y, int value) // Xet chien thang theo hang do
         win.clear();
     return test;
 }
-int _Board::checksecondDiagonal(int x, int y, int value)
+int checksecondDiagonal(int x, int y, int value)
 {
     int dong, cot;
     int test = -1, loop = 1;
     int check2dau = 0;
     int countDiaTop = 0, countDiaBot = 0;
-    dong = (x - _left - 2) / 4;
-    cot = (y - _top - 1) / 2;
+    dong = (x - _b->_left - 2) / 4;
+    cot = (y - _b->_top - 1) / 2;
     int cottren, cotduoi; // Xet dem X ve phia tren, va ve phia duoi
     int dongphai, dongtrai;
     cottren = cotduoi = cot;
     dongphai = dongtrai = dong;
     // Xet X chien thang
     // Xet hang ngang
-    while (_pArr[cottren][dongtrai].getCheck() == value)
+    while (getCheck(_pArr[cottren][dongtrai]._check) == value)
     {
         win.push_back(_pArr[cottren][dongtrai]);
         countDiaTop++;
@@ -306,16 +314,16 @@ int _Board::checksecondDiagonal(int x, int y, int value)
         dongtrai--;
     }
 
-    while (_pArr[cotduoi][dongphai].getCheck() == value)
+    while (getCheck(_pArr[cotduoi][dongphai]._check) == value)
     {
         win.push_back(_pArr[cotduoi][dongphai]);
         countDiaBot++;
-        if (cotduoi == _size - 1 || dongphai == _size - 1)
+        if (cotduoi == _b->_size - 1 || dongphai == _b->_size - 1)
             break;
         cotduoi++;
         dongphai++;
     }
-    if (_pArr[cottren][dongtrai].getCheck() == -value && _pArr[cotduoi][dongphai].getCheck() == -value)
+    if (getCheck(_pArr[cottren][dongtrai]._check) == -value && getCheck(_pArr[cotduoi][dongphai]._check) == -value)
         check2dau = 1;
     if ((countDiaTop + countDiaBot - 1) == 5 && (check2dau == 0))
     {
@@ -331,8 +339,8 @@ int _Board::checksecondDiagonal(int x, int y, int value)
             Textcolor(rand() % 15 + 1);
             for (int i = 0; i < win.size(); i++)
             {
-                gotoXY(win[i].getX(), win[i].getY());
-                if (win[i].getCheck() == -1)
+                gotoXY(getX(win[i]._x), getY(win[i]._y));
+                if (getCheck(win[i]._check) == -1)
                     cout << "X";
                 else
                     cout << "O";
@@ -345,39 +353,39 @@ int _Board::checksecondDiagonal(int x, int y, int value)
         win.clear();
     return test;
 }
-int _Board::checkfirstDiagonal(int x, int y, int value)
+int checkfirstDiagonal(int x, int y, int value)
 {
     int dong, cot;
     int test = -1, loop = 1;
     int check2dau = 0;
     int countDiaTop = 0, countDiaBot = 0;
-    dong = (x - _left - 2) / 4;
-    cot = (y - _top - 1) / 2;
+    dong = (x - _b->_left - 2) / 4;
+    cot = (y - _b->_top - 1) / 2;
     int cottren, cotduoi; // Xet dem X ve phia tren, va ve phia duoi
     int dongphai, dongtrai;
     cottren = cotduoi = cot;
     dongphai = dongtrai = dong;
     // Xet X chien thang
     // Xet hang ngang
-    while (_pArr[cottren][dongphai].getCheck() == value)
+    while (getCheck(_pArr[cottren][dongphai]._check) == value)
     {
         countDiaTop++;
         win.push_back(_pArr[cottren][dongphai]);
-        if (cottren == 0 || dongphai == _size - 1)
+        if (cottren == 0 || dongphai == _b->_size - 1)
             break;
         cottren--;
         dongphai++;
     }
-    while (_pArr[cotduoi][dongtrai].getCheck() == value)
+    while (getCheck(_pArr[cotduoi][dongtrai]._check) == value)
     {
         win.push_back(_pArr[cotduoi][dongtrai]);
         countDiaBot++;
-        if (cotduoi == _size - 1 || dongtrai == 0)
+        if (cotduoi == _b->_size - 1 || dongtrai == 0)
             break;
         cotduoi++;
         dongtrai--;
     }
-    if (_pArr[cottren][dongphai].getCheck() == -value && _pArr[cotduoi][dongtrai].getCheck() == -value)
+    if (getCheck(_pArr[cottren][dongphai]._check) == -value && getCheck(_pArr[cotduoi][dongtrai]._check) == -value)
         check2dau = 1;
     if ((countDiaTop + countDiaBot - 1) == 5 && (check2dau == 0))
     {
@@ -393,8 +401,8 @@ int _Board::checkfirstDiagonal(int x, int y, int value)
             Textcolor(rand() % 15 + 1);
             for (int i = 0; i < win.size(); i++)
             {
-                gotoXY(win[i].getX(), win[i].getY());
-                if (win[i].getCheck() == -1)
+                gotoXY(getX(win[i]._x), getY(win[i]._y));
+                if (getCheck(win[i]._check) == -1)
                 {
                     cout << "X";
                 }
@@ -411,7 +419,7 @@ int _Board::checkfirstDiagonal(int x, int y, int value)
         win.clear();
     return test;
 }
-int _Board::testBoard(int x, int y)
+int testBoard(int x, int y)
 {
     //Đây là những trường hợp mà quân X chiến thắng.
     if (checkWinRow(x, y, -1) == 1)
@@ -431,16 +439,13 @@ int _Board::testBoard(int x, int y)
         return 1;
     if (checksecondDiagonal(x, y, 1) == 1)
         return 1;
-    if (CountX + CountY == SIZE * SIZE)
+    if (_b->CountX + _b->CountY == SIZE * SIZE)
         return 0;
     return 2;
 }
-_Board::~_Board()
-{
-}
 
 // Xu li AI
-long _Board::SoDiemTanCong_DuyetNgang(long Dong, long Cot, const long Defend_Score[], const long Attack_Score[])
+long SoDiemTanCong_DuyetNgang(long Dong, long Cot, const long Defend_Score[], const long Attack_Score[])
 {
     long iScoreTempNgang = 0;
     long iScoreAttack = 0;
@@ -449,33 +454,33 @@ long _Board::SoDiemTanCong_DuyetNgang(long Dong, long Cot, const long Defend_Sco
     int iSoQuanTa2 = 0;
     int iSoQuanDich2 = 0;
     //Phía trên ô đang xét. (Ta gọi là trường hợp 1).
-    for (int iDem = 1; iDem < 6 && Cot + iDem < _size; iDem++)
+    for (int iDem = 1; iDem < 6 && Cot + iDem < _b->_size; iDem++)
     {
         //Nếu phía trên ô đang xét là quân ta, iSoQuanTa++; (số quân ta).
-        if (_pArr[Dong][Cot + iDem].getCheck() == 1)
+        if (getCheck(_pArr[Dong][Cot + iDem]._check) == 1)
             iSoQuanTa++;
         //Nếu phía trên ô đang xét là quân địch, iSoQuanDich++; (số quân địch) và thoát khỏi vòng lặp (Trường hợp 1).
-        if (_pArr[Dong][Cot + iDem].getCheck() == -1)
+        if (getCheck(_pArr[Dong][Cot + iDem]._check) == -1)
         {
             iSoQuanDich++;
             break;
         }
         //Nếu phía trên ô đang xét là ô trống, ta sẽ xét phía trên ô trống này.
-        if (_pArr[Dong][Cot + iDem].getCheck() == 0)
+        if (getCheck(_pArr[Dong][Cot + iDem]._check) == 0)
         {
-            for (int iDem2 = 2; iDem2 < 7 && Cot + iDem2 < _size; iDem2++)
+            for (int iDem2 = 2; iDem2 < 7 && Cot + iDem2 < _b->_size; iDem2++)
             {
                 //Nếu phía trên ô trống là quân ta, iSoQuanTa2++; (Số quân ta 2).
-                if (_pArr[Dong][Cot + iDem2].getCheck() == 1)
+                if (getCheck(_pArr[Dong][Cot + iDem2]._check) == 1)
                     iSoQuanTa2++;
                 //Nếu phía trên ô trống là quân địch, iSoQuanDich2++; (Số quân địch 2) và thoát khỏi vòng lặp.
-                if (_pArr[Dong][Cot + iDem2].getCheck() == -1)
+                if (getCheck(_pArr[Dong][Cot + iDem2]._check) == -1)
                 {
                     iSoQuanDich2++;
                     break;
                 }
                 //Nếu phía trên ô trống là ô trống, thoát khỏi vòng lặp.
-                if (_pArr[Dong][Cot + iDem2].getCheck() == 0)
+                if (getCheck(_pArr[Dong][Cot + iDem2]._check) == 0)
                     break;
             }
             //Thoát khỏi vòng lặp.
@@ -486,30 +491,30 @@ long _Board::SoDiemTanCong_DuyetNgang(long Dong, long Cot, const long Defend_Sco
     for (int iDem = 1; iDem < 6 && Cot - iDem >= 0; iDem++)
     {
         //Nếu phía dưới ô đang xét là quân ta, iSoQuanTa++; (số quân ta).
-        if (_pArr[Dong][Cot - iDem].getCheck() == 1)
+        if (getCheck(_pArr[Dong][Cot - iDem]._check) == 1)
             iSoQuanTa++;
         //Nếu phía dưới ô đang xét là quân địch, iSoQuanDich++; (số quân địch) và thoát khỏi vòng lặp (Trường hợp 2).
-        if (_pArr[Dong][Cot - iDem].getCheck() == -1)
+        if (getCheck(_pArr[Dong][Cot - iDem]._check) == -1)
         {
             iSoQuanDich++;
             break;
         }
         //Nếu phía dưới ô đang xét là ô trống, ta sẽ xét phía trên ô trống này.
-        if (_pArr[Dong][Cot - iDem].getCheck() == 0)
+        if (getCheck(_pArr[Dong][Cot - iDem]._check) == 0)
         {
             for (int iDem2 = 2; iDem2 < 7 && Cot - iDem2 >= 0; iDem2++)
             {
                 //Nếu phía dưới ô trống là quân ta, iSoQuanTa2++; (Số quân ta 2).
-                if (_pArr[Dong][Cot - iDem2].getCheck() == 1)
+                if (getCheck(_pArr[Dong][Cot - iDem2]._check) == 1)
                     iSoQuanTa2++;
                 //Nếu phía dưới ô trống là quân địch, iSoQuanDich2++; (Số quân địch 2).
-                if (_pArr[Dong][Cot - iDem2].getCheck() == -1)
+                if (getCheck(_pArr[Dong][Cot - iDem2]._check) == -1)
                 {
                     iSoQuanDich2++;
                     break;
                 }
                 //Nếu phía dưới ô trống là ô trống, thoát khỏi vòng lặp.
-                if (_pArr[Dong][Cot - iDem2].getCheck() == 0)
+                if (getCheck(_pArr[Dong][Cot - iDem2]._check) == 0)
                     break;
             }
             //Thoát khỏi vòng lặp.
@@ -572,7 +577,7 @@ long _Board::SoDiemTanCong_DuyetNgang(long Dong, long Cot, const long Defend_Sco
         iScoreTempNgang += Defend_Score[iSoQuanDich2];
     return iScoreTempNgang;
 }
-long _Board::SoDiemTanCong_DuyetDoc(long Dong, long Cot, const long Defend_Score[], const long Attack_Score[])
+long SoDiemTanCong_DuyetDoc(long Dong, long Cot, const long Defend_Score[], const long Attack_Score[])
 {
     long iScoreTempDoc = 0;
     long iScoreAttack = 0;
@@ -580,27 +585,27 @@ long _Board::SoDiemTanCong_DuyetDoc(long Dong, long Cot, const long Defend_Score
     int iSoQuanDich = 0;
     int iSoQuanTa2 = 0;
     int iSoQuanDich2 = 0;
-    for (int iDem = 1; iDem < 6 && Dong + iDem < _size; iDem++)
+    for (int iDem = 1; iDem < 6 && Dong + iDem < _b->_size; iDem++)
     {
-        if (_pArr[Dong + iDem][Cot].getCheck() == 1)
+        if (getCheck(_pArr[Dong + iDem][Cot]._check) == 1)
             iSoQuanTa++;
-        if (_pArr[Dong + iDem][Cot].getCheck() == -1)
+        if (getCheck(_pArr[Dong + iDem][Cot]._check) == -1)
         {
             iSoQuanDich++;
             break;
         }
-        if (_pArr[Dong + iDem][Cot].getCheck() == 0)
+        if (getCheck(_pArr[Dong + iDem][Cot]._check) == 0)
         {
-            for (int iDem2 = 2; iDem2 < 7 && Dong + iDem2 < _size; iDem2++)
+            for (int iDem2 = 2; iDem2 < 7 && Dong + iDem2 < _b->_size; iDem2++)
             {
-                if (_pArr[Dong + iDem2][Cot].getCheck() == 1)
+                if (getCheck(_pArr[Dong + iDem2][Cot]._check) == 1)
                     iSoQuanTa2++;
-                if (_pArr[Dong + iDem2][Cot].getCheck() == -1)
+                if (getCheck(_pArr[Dong + iDem2][Cot]._check) == -1)
                 {
                     iSoQuanDich2++;
                     break;
                 }
-                if (_pArr[Dong + iDem2][Cot].getCheck() == 0)
+                if (getCheck(_pArr[Dong + iDem2][Cot]._check) == 0)
                     break;
             }
             break;
@@ -608,25 +613,25 @@ long _Board::SoDiemTanCong_DuyetDoc(long Dong, long Cot, const long Defend_Score
     }
     for (int iDem = 1; iDem < 6 && Dong - iDem >= 0; iDem++)
     {
-        if (_pArr[Dong - iDem][Cot].getCheck() == 1)
+        if (getCheck(_pArr[Dong - iDem][Cot]._check) == 1)
             iSoQuanTa++;
-        if (_pArr[Dong - iDem][Cot].getCheck() == -1)
+        if (getCheck(_pArr[Dong - iDem][Cot]._check) == -1)
         {
             iSoQuanDich++;
             break;
         }
-        if (_pArr[Dong - iDem][Cot].getCheck() == 0)
+        if (getCheck(_pArr[Dong - iDem][Cot]._check) == 0)
         {
             for (int iDem2 = 2; iDem2 < 7 && Dong - iDem2 >= 0; iDem2++)
             {
-                if (_pArr[Dong - iDem2][Cot].getCheck() == 1)
+                if (getCheck(_pArr[Dong - iDem2][Cot]._check) == 1)
                     iSoQuanTa2++;
-                if (_pArr[Dong - iDem2][Cot].getCheck() == -1)
+                if (getCheck(_pArr[Dong - iDem2][Cot]._check) == -1)
                 {
                     iSoQuanDich2++;
                     break;
                 }
-                if (_pArr[Dong - iDem2][Cot].getCheck() == 0)
+                if (getCheck(_pArr[Dong - iDem2][Cot]._check) == 0)
                 {
                     break;
                 }
@@ -663,7 +668,7 @@ long _Board::SoDiemTanCong_DuyetDoc(long Dong, long Cot, const long Defend_Score
     return iScoreTempDoc;
 }
 
-long _Board::SoDiemTanCong_DuyetCheo1(long Dong, long Cot, const long Defend_Score[], const long Attack_Score[])
+long SoDiemTanCong_DuyetCheo1(long Dong, long Cot, const long Defend_Score[], const long Attack_Score[])
 {
     long iScoreTempCheoNguoc = 0;
     long iScoreAttack = 0;
@@ -671,27 +676,27 @@ long _Board::SoDiemTanCong_DuyetCheo1(long Dong, long Cot, const long Defend_Sco
     int iSoQuanDich = 0;
     int iSoQuanTa2 = 0;
     int iSoQuanDich2 = 0;
-    for (int iDem = 1; iDem < 6 && Cot + iDem < _size && Dong + iDem < _size; iDem++)
+    for (int iDem = 1; iDem < 6 && Cot + iDem < _b->_size && Dong + iDem < _b->_size; iDem++)
     {
-        if (_pArr[Dong + iDem][Cot + iDem].getCheck() == 1)
+        if (getCheck(_pArr[Dong + iDem][Cot + iDem]._check) == 1)
             iSoQuanTa++;
-        if (_pArr[Dong + iDem][Cot + iDem].getCheck() == -1)
+        if (getCheck(_pArr[Dong + iDem][Cot + iDem]._check) == -1)
         {
             iSoQuanDich++;
             break;
         }
-        if (_pArr[Dong + iDem][Cot + iDem].getCheck() == 0)
+        if (getCheck(_pArr[Dong + iDem][Cot + iDem]._check) == 0)
         {
-            for (int iDem2 = 2; iDem2 < 7 && Cot + iDem2 < _size && Dong + iDem2 < _size; iDem2++)
+            for (int iDem2 = 2; iDem2 < 7 && Cot + iDem2 < _b->_size && Dong + iDem2 < _b->_size; iDem2++)
             {
-                if (_pArr[Dong + iDem2][Cot + iDem2].getCheck() == 1)
+                if (getCheck(_pArr[Dong + iDem2][Cot + iDem2]._check) == 1)
                     iSoQuanTa2++;
-                if (_pArr[Dong + iDem2][Cot + iDem2].getCheck() == -1)
+                if (getCheck(_pArr[Dong + iDem2][Cot + iDem2]._check) == -1)
                 {
                     iSoQuanDich2++;
                     break;
                 }
-                if (_pArr[Dong + iDem2][Cot + iDem2].getCheck() == 0)
+                if (getCheck(_pArr[Dong + iDem2][Cot + iDem2]._check) == 0)
                 {
                     break;
                 }
@@ -701,25 +706,25 @@ long _Board::SoDiemTanCong_DuyetCheo1(long Dong, long Cot, const long Defend_Sco
     }
     for (int iDem = 1; iDem < 6 && Cot - iDem >= 0 && Dong - iDem >= 0; iDem++)
     {
-        if (_pArr[Dong - iDem][Cot - iDem].getCheck() == 1)
+        if (getCheck(_pArr[Dong - iDem][Cot - iDem]._check) == 1)
             iSoQuanTa++;
-        if (_pArr[Dong - iDem][Cot - iDem].getCheck() == -1)
+        if (getCheck(_pArr[Dong - iDem][Cot - iDem]._check) == -1)
         {
             iSoQuanDich++;
             break;
         }
-        if (_pArr[Dong - iDem][Cot - iDem].getCheck() == 0)
+        if (getCheck(_pArr[Dong - iDem][Cot - iDem]._check) == 0)
         {
             for (int iDem2 = 2; iDem2 < 7 && Cot - iDem2 >= 0 && Dong - iDem2 >= 0; iDem2++)
             {
-                if (_pArr[Dong - iDem2][Cot - iDem2].getCheck() == 1)
+                if (getCheck(_pArr[Dong - iDem2][Cot - iDem2]._check) == 1)
                     iSoQuanTa2++;
-                if (_pArr[Dong - iDem2][Cot - iDem2].getCheck() == -1)
+                if (getCheck(_pArr[Dong - iDem2][Cot - iDem2]._check) == -1)
                 {
                     iSoQuanDich2++;
                     break;
                 }
-                if (_pArr[Dong - iDem2][Cot - iDem2].getCheck() == 0)
+                if (getCheck(_pArr[Dong - iDem2][Cot - iDem2]._check) == 0)
                     break;
             }
             break;
@@ -752,7 +757,7 @@ long _Board::SoDiemTanCong_DuyetCheo1(long Dong, long Cot, const long Defend_Sco
         iScoreTempCheoNguoc += Defend_Score[iSoQuanDich2];
     return iScoreTempCheoNguoc;
 }
-long _Board::SoDiemTanCong_DuyetCheo2(long Dong, long Cot, const long Defend_Score[], const long Attack_Score[])
+long SoDiemTanCong_DuyetCheo2(long Dong, long Cot, const long Defend_Score[], const long Attack_Score[])
 {
     long iScoreTempCheoXuoi = 0;
     long iScoreAttack = 0;
@@ -760,53 +765,53 @@ long _Board::SoDiemTanCong_DuyetCheo2(long Dong, long Cot, const long Defend_Sco
     int iSoQuanDich = 0;
     int iSoQuanTa2 = 0;
     int iSoQuanDich2 = 0;
-    for (int iDem = 1; iDem < 6 && Cot - iDem >= 0 && Dong + iDem < _size; iDem++)
+    for (int iDem = 1; iDem < 6 && Cot - iDem >= 0 && Dong + iDem < _b->_size; iDem++)
     {
-        if (_pArr[Dong + iDem][Cot - iDem].getCheck() == 1)
+        if (getCheck(_pArr[Dong + iDem][Cot - iDem]._check) == 1)
             iSoQuanTa++;
-        if (_pArr[Dong + iDem][Cot - iDem].getCheck() == -1)
+        if (getCheck(_pArr[Dong + iDem][Cot - iDem]._check) == -1)
         {
             iSoQuanDich++;
             break;
         }
-        if (_pArr[Dong + iDem][Cot - iDem].getCheck() == 0)
+        if (getCheck(_pArr[Dong + iDem][Cot - iDem]._check) == 0)
         {
-            for (int iDem2 = 2; iDem2 < 7 && Cot - iDem2 >= 0 && Dong + iDem2 < _size; iDem2++)
+            for (int iDem2 = 2; iDem2 < 7 && Cot - iDem2 >= 0 && Dong + iDem2 < _b->_size; iDem2++)
             {
-                if (_pArr[Dong + iDem2][Cot - iDem2].getCheck() == 1)
+                if (getCheck(_pArr[Dong + iDem2][Cot - iDem2]._check) == 1)
                     iSoQuanTa2++;
-                if (_pArr[Dong + iDem2][Cot - iDem2].getCheck() == -1)
+                if (getCheck(_pArr[Dong + iDem2][Cot - iDem2]._check) == -1)
                 {
                     iSoQuanDich2++;
                     break;
                 }
-                if (_pArr[Dong + iDem2][Cot - iDem2].getCheck() == 0)
+                if (getCheck(_pArr[Dong + iDem2][Cot - iDem2]._check) == 0)
                     break;
             }
             break;
         }
     }
-    for (int iDem = 1; iDem < 6 && Cot + iDem < _size && Dong - iDem >= 0; iDem++)
+    for (int iDem = 1; iDem < 6 && Cot + iDem < _b->_size && Dong - iDem >= 0; iDem++)
     {
-        if (_pArr[Dong - iDem][Cot + iDem].getCheck() == 1)
+        if (getCheck(_pArr[Dong - iDem][Cot + iDem]._check) == 1)
             iSoQuanTa++;
-        if (_pArr[Dong - iDem][Cot + iDem].getCheck() == -1)
+        if (getCheck(_pArr[Dong - iDem][Cot + iDem]._check) == -1)
         {
             iSoQuanDich++;
             break;
         }
-        if (_pArr[Dong - iDem][Cot + iDem].getCheck() == 0)
+        if (getCheck(_pArr[Dong - iDem][Cot + iDem]._check) == 0)
         {
-            for (int iDem2 = 2; iDem2 < 7 && Cot + iDem2 < _size && Dong - iDem2 >= 0; iDem2++)
+            for (int iDem2 = 2; iDem2 < 7 && Cot + iDem2 < _b->_size && Dong - iDem2 >= 0; iDem2++)
             {
-                if (_pArr[Dong - iDem2][Cot + iDem2].getCheck() == 1)
+                if (getCheck(_pArr[Dong - iDem2][Cot + iDem2]._check) == 1)
                     iSoQuanTa2++;
-                if (_pArr[Dong - iDem2][Cot + iDem2].getCheck() == -1)
+                if (getCheck(_pArr[Dong - iDem2][Cot + iDem2]._check) == -1)
                 {
                     iSoQuanDich2++;
                     break;
                 }
-                if (_pArr[Dong - iDem2][Cot + iDem2].getCheck() == 0)
+                if (getCheck(_pArr[Dong - iDem2][Cot + iDem2]._check) == 0)
                     break;
             }
             break;
@@ -840,7 +845,7 @@ long _Board::SoDiemTanCong_DuyetCheo2(long Dong, long Cot, const long Defend_Sco
     return iScoreTempCheoXuoi;
 }
 
-long _Board::SoDiemPhongThu_DuyetDoc(long Dong, long Cot, const long Defend_Score[], const long Attack_Score[])
+long SoDiemPhongThu_DuyetDoc(long Dong, long Cot, const long Defend_Score[], const long Attack_Score[])
 {
     long iScoreTempDoc = 0;
     long iScoreDefend = 0;
@@ -848,27 +853,27 @@ long _Board::SoDiemPhongThu_DuyetDoc(long Dong, long Cot, const long Defend_Scor
     int iSoQuanTa = 0;
     int iSoQuanDich2 = 0;
     int iSoQuanTa2 = 0;
-    for (int iDem = 1; iDem < 6 && Dong + iDem < _size; iDem++)
+    for (int iDem = 1; iDem < 6 && Dong + iDem < _b->_size; iDem++)
     {
-        if (_pArr[Dong + iDem][Cot].getCheck() == 1)
+        if (getCheck(_pArr[Dong + iDem][Cot]._check) == 1)
         {
             iSoQuanTa++;
             break;
         }
-        if (_pArr[Dong + iDem][Cot].getCheck() == -1)
+        if (getCheck(_pArr[Dong + iDem][Cot]._check) == -1)
             iSoQuanDich++;
-        if (_pArr[Dong + iDem][Cot].getCheck() == 0)
+        if (getCheck(_pArr[Dong + iDem][Cot]._check) == 0)
         {
-            for (int iDem2 = 2; iDem2 < 7 && Dong + iDem2 < _size; iDem2++)
+            for (int iDem2 = 2; iDem2 < 7 && Dong + iDem2 < _b->_size; iDem2++)
             {
-                if (_pArr[Dong + iDem2][Cot].getCheck() == 1)
+                if (getCheck(_pArr[Dong + iDem2][Cot]._check) == 1)
                 {
                     iSoQuanTa2++;
                     break;
                 }
-                if (_pArr[Dong + iDem2][Cot].getCheck() == -1)
+                if (getCheck(_pArr[Dong + iDem2][Cot]._check) == -1)
                     iSoQuanDich2++;
-                if (_pArr[Dong + iDem2][Cot].getCheck() == 0)
+                if (getCheck(_pArr[Dong + iDem2][Cot]._check) == 0)
                     break;
             }
             break;
@@ -876,25 +881,25 @@ long _Board::SoDiemPhongThu_DuyetDoc(long Dong, long Cot, const long Defend_Scor
     }
     for (int iDem = 1; iDem < 6 && Dong - iDem >= 0; iDem++)
     {
-        if (_pArr[Dong - iDem][Cot].getCheck() == 1)
+        if (getCheck(_pArr[Dong - iDem][Cot]._check) == 1)
         {
             iSoQuanTa++;
             break;
         }
-        if (_pArr[Dong - iDem][Cot].getCheck() == -1)
+        if (getCheck(_pArr[Dong - iDem][Cot]._check) == -1)
             iSoQuanDich++;
-        if (_pArr[Dong - iDem][Cot].getCheck() == 0)
+        if (getCheck(_pArr[Dong - iDem][Cot]._check) == 0)
         {
             for (int iDem2 = 2; iDem2 < 7 && Dong - iDem2 >= 0; iDem2++)
             {
-                if (_pArr[Dong - iDem2][Cot].getCheck() == 1)
+                if (getCheck(_pArr[Dong - iDem2][Cot]._check) == 1)
                 {
                     iSoQuanTa2++;
                     break;
                 }
-                if (_pArr[Dong - iDem2][Cot].getCheck() == -1)
+                if (getCheck(_pArr[Dong - iDem2][Cot]._check) == -1)
                     iSoQuanDich2++;
-                if (_pArr[Dong - iDem2][Cot].getCheck() == 0)
+                if (getCheck(_pArr[Dong - iDem2][Cot]._check) == 0)
                     break;
             }
             break;
@@ -916,7 +921,7 @@ long _Board::SoDiemPhongThu_DuyetDoc(long Dong, long Cot, const long Defend_Scor
     return iScoreTempDoc;
 }
 
-long _Board::SoDiemPhongThu_DuyetNgang(long Dong, long Cot, const long Defend_Score[], const long Attack_Score[])
+long SoDiemPhongThu_DuyetNgang(long Dong, long Cot, const long Defend_Score[], const long Attack_Score[])
 {
     long iScoreTempNgang = 0;
     long iScoreDefend = 0;
@@ -925,32 +930,32 @@ long _Board::SoDiemPhongThu_DuyetNgang(long Dong, long Cot, const long Defend_Sc
     int iSoQuanDich2 = 0;
     int iSoQuanTa2 = 0;
     //Phía trên ô đang xét. (Ta gọi là trường hợp 1).
-    for (int iDem = 1; iDem < 6 && Cot + iDem < _size; iDem++)
+    for (int iDem = 1; iDem < 6 && Cot + iDem < _b->_size; iDem++)
     {
         //Nếu phía trên ô đang xét là quân ta, iSoQuanTa++; (số quân ta) và thoát khỏi vòng lặp (Trường hợp 1).
-        if (_pArr[Dong][Cot + iDem].getCheck() == 1)
+        if (getCheck(_pArr[Dong][Cot + iDem]._check) == 1)
         {
             iSoQuanTa++;
             break;
         }
         //Nếu phía trên ô đang xét là quân địch, iSoQuanDich++; (số quân địch).
-        if (_pArr[Dong][Cot + iDem].getCheck() == -1)
+        if (getCheck(_pArr[Dong][Cot + iDem]._check) == -1)
             iSoQuanDich++;
         //Nếu phía trên ô đang xét là ô trống, ta sẽ xét phía trên ô trống này.
-        if (_pArr[Dong][Cot + iDem].getCheck() == 0)
+        if (getCheck(_pArr[Dong][Cot + iDem]._check) == 0)
         {
-            for (int iDem2 = 2; iDem2 < 7 && Cot + iDem2 < _size; iDem2++)
+            for (int iDem2 = 2; iDem2 < 7 && Cot + iDem2 < _b->_size; iDem2++)
             {
                 //Nếu phía trên ô trống là quân ta, iSoQuanTa2++; (Số quân ta 2) và thoát khỏi vòng lặp.
-                if (_pArr[Dong][Cot + iDem2].getCheck() == 1)
+                if (getCheck(_pArr[Dong][Cot + iDem2]._check) == 1)
                 {
                     iSoQuanTa2++;
                     break;
                 }
                 //Nếu phía trên ô trống là quân địch, iSoQuanDich2++; (Số quân địch 2).
-                if (_pArr[Dong][Cot + iDem2].getCheck() == -1)
+                if (getCheck(_pArr[Dong][Cot + iDem2]._check) == -1)
                     iSoQuanDich2++;
-                if (_pArr[Dong][Cot + iDem2].getCheck() == 0)
+                if (getCheck(_pArr[Dong][Cot + iDem2]._check) == 0)
                     //Nếu phía trên ô trống là ô trống, thoát khỏi vòng lặp.
                     break;
             }
@@ -962,30 +967,30 @@ long _Board::SoDiemPhongThu_DuyetNgang(long Dong, long Cot, const long Defend_Sc
     for (int iDem = 1; iDem < 6 && Cot - iDem >= 0; iDem++)
     {
         //Nếu phía dưới ô đang xét là quân ta, iSoQuanTa++; (số quân ta) và thoát khỏi vòng lặp (Trường hợp 2).
-        if (_pArr[Dong][Cot - iDem].getCheck() == 1)
+        if (getCheck(_pArr[Dong][Cot - iDem]._check) == 1)
         {
             iSoQuanTa++;
             break;
         }
         //Nếu phía dưới ô đang xét là quân địch, iSoQuanDich++; (số quân địch).
-        if (_pArr[Dong][Cot - iDem].getCheck() == -1)
+        if (getCheck(_pArr[Dong][Cot - iDem]._check) == -1)
             iSoQuanDich++;
         //Nếu phía dưới ô đang xét là ô trống, ta sẽ xét phía trên ô trống này.
-        if (_pArr[Dong][Cot - iDem].getCheck() == 0)
+        if (getCheck(_pArr[Dong][Cot - iDem]._check) == 0)
         {
             for (int iDem2 = 2; iDem2 < 7 && Cot - iDem2 >= 0; iDem2++)
             {
                 //Nếu dưới trên ô trống là quân ta, iSoQuanTa2++; (Số quân ta 2) và thoát khỏi vòng lặp.
-                if (_pArr[Dong][Cot - iDem2].getCheck() == 1)
+                if (getCheck(_pArr[Dong][Cot - iDem2]._check) == 1)
                 {
                     iSoQuanTa2++;
                     break;
                 }
                 //Nếu phía dưới ô trống là quân địch, iSoQuanDich2++; (Số quân địch 2).
-                if (_pArr[Dong][Cot - iDem2].getCheck() == 0)
+                if (getCheck(_pArr[Dong][Cot - iDem2]._check) == 0)
                     break;
                 //Nếu phía dưới ô trống là ô trống, thoát khỏi vòng lặp.
-                if (_pArr[Dong][Cot - iDem2].getCheck() == -1)
+                if (getCheck(_pArr[Dong][Cot - iDem2]._check) == -1)
                     iSoQuanDich2++;
             }
             //Thoát khỏi vòng lặp.
@@ -1025,7 +1030,7 @@ long _Board::SoDiemPhongThu_DuyetNgang(long Dong, long Cot, const long Defend_Sc
     return iScoreTempNgang;
 }
 
-long _Board::SoDiemPhongThu_DuyetCheo1(long Dong, long Cot, const long Defend_Score[], const long Attack_Score[])
+long SoDiemPhongThu_DuyetCheo1(long Dong, long Cot, const long Defend_Score[], const long Attack_Score[])
 {
     long iScoreTempCheoNguoc = 0;
     long iScoreDefend = 0;
@@ -1033,58 +1038,58 @@ long _Board::SoDiemPhongThu_DuyetCheo1(long Dong, long Cot, const long Defend_Sc
     int iSoQuanTa = 0;
     int iSoQuanDich2 = 0;
     int iSoQuanTa2 = 0;
-    for (int iDem = 1; iDem < 6 && Cot + iDem < _size && Dong + iDem < _size; iDem++)
+    for (int iDem = 1; iDem < 6 && Cot + iDem < _b->_size && Dong + iDem < _b->_size; iDem++)
     {
-        if (_pArr[Dong + iDem][Cot + iDem].getCheck() == 1)
+        if (getCheck(_pArr[Dong + iDem][Cot + iDem]._check) == 1)
         {
             iSoQuanTa++;
             break;
         }
-        if (_pArr[Dong + iDem][Cot + iDem].getCheck() == 0)
+        if (getCheck(_pArr[Dong + iDem][Cot + iDem]._check) == 0)
         {
-            for (int iDem2 = 2; iDem2 < 7 && Cot + iDem2 < _size && Dong + iDem2 < _size; iDem2++)
+            for (int iDem2 = 2; iDem2 < 7 && Cot + iDem2 < _b->_size && Dong + iDem2 < _b->_size; iDem2++)
             {
-                if (_pArr[Dong + iDem2][Cot + iDem2].getCheck() == 1)
+                if (getCheck(_pArr[Dong + iDem2][Cot + iDem2]._check) == 1)
                 {
                     iSoQuanTa2++;
                     break;
                 }
-                if (_pArr[Dong + iDem2][Cot + iDem2].getCheck() == 0)
+                if (getCheck(_pArr[Dong + iDem2][Cot + iDem2]._check) == 0)
                     break;
-                if (_pArr[Dong + iDem2][Cot + iDem2].getCheck() == -1)
+                if (getCheck(_pArr[Dong + iDem2][Cot + iDem2]._check) == -1)
                     iSoQuanDich2++;
             }
             break;
         }
-        if (_pArr[Dong + iDem][Cot + iDem].getCheck() == -1)
+        if (getCheck(_pArr[Dong + iDem][Cot + iDem]._check) == -1)
             iSoQuanDich++;
     }
     for (int iDem = 1; iDem < 6 && Cot - iDem >= 0 && Dong - iDem >= 0; iDem++)
     {
-        if (_pArr[Dong - iDem][Cot - iDem].getCheck() == 1)
+        if (getCheck(_pArr[Dong - iDem][Cot - iDem]._check) == 1)
         {
             iSoQuanTa++;
             break;
         }
 
-        if (_pArr[Dong - iDem][Cot - iDem].getCheck() == 0)
+        if (getCheck(_pArr[Dong - iDem][Cot - iDem]._check) == 0)
         {
             for (int iDem2 = 2; iDem2 < 7 && Cot - iDem2 >= 0 && Dong - iDem2 >= 0; iDem2++)
             {
-                if (_pArr[Dong - iDem2][Cot - iDem2].getCheck() == 1)
+                if (getCheck(_pArr[Dong - iDem2][Cot - iDem2]._check) == 1)
                 {
                     iSoQuanTa2++;
                     break;
                 }
 
-                if (_pArr[Dong - iDem2][Cot - iDem2].getCheck() == 0)
+                if (getCheck(_pArr[Dong - iDem2][Cot - iDem2]._check) == 0)
                     break;
-                if (_pArr[Dong - iDem2][Cot - iDem2].getCheck() == -1)
+                if (getCheck(_pArr[Dong - iDem2][Cot - iDem2]._check) == -1)
                     iSoQuanDich2++;
             }
             break;
         }
-        if (_pArr[Dong - iDem][Cot - iDem].getCheck() == -1)
+        if (getCheck(_pArr[Dong - iDem][Cot - iDem]._check) == -1)
             iSoQuanDich++;
     }
     if (iSoQuanTa == 2)
@@ -1102,7 +1107,7 @@ long _Board::SoDiemPhongThu_DuyetCheo1(long Dong, long Cot, const long Defend_Sc
     return iScoreTempCheoNguoc;
 }
 
-long _Board::SoDiemPhongThu_DuyetCheo2(long Dong, long Cot, const long Defend_Score[], const long Attack_Score[])
+long SoDiemPhongThu_DuyetCheo2(long Dong, long Cot, const long Defend_Score[], const long Attack_Score[])
 {
     long iScoreTempCheoXuoi = 0;
     long iScoreDefend = 0;
@@ -1110,56 +1115,56 @@ long _Board::SoDiemPhongThu_DuyetCheo2(long Dong, long Cot, const long Defend_Sc
     int iSoQuanTa = 0;
     int iSoQuanDich2 = 0;
     int iSoQuanTa2 = 0;
-    for (int iDem = 1; iDem < 6 && Cot - iDem >= 0 && Dong + iDem < _size; iDem++)
+    for (int iDem = 1; iDem < 6 && Cot - iDem >= 0 && Dong + iDem < _b->_size; iDem++)
     {
-        if (_pArr[Dong + iDem][Cot - iDem].getCheck() == 1)
+        if (getCheck(_pArr[Dong + iDem][Cot - iDem]._check) == 1)
         {
             iSoQuanTa++;
             break;
         }
-        if (_pArr[Dong + iDem][Cot - iDem].getCheck() == 0)
+        if (getCheck(_pArr[Dong + iDem][Cot - iDem]._check) == 0)
         {
-            for (int iDem2 = 2; iDem2 < 7 && Cot - iDem2 >= 0 && Dong + iDem2 < _size; iDem2++)
+            for (int iDem2 = 2; iDem2 < 7 && Cot - iDem2 >= 0 && Dong + iDem2 < _b->_size; iDem2++)
             {
-                if (_pArr[Dong + iDem2][Cot - iDem2].getCheck() == 1)
+                if (getCheck(_pArr[Dong + iDem2][Cot - iDem2]._check) == 1)
                 {
                     iSoQuanTa2++;
                     break;
                 }
-                if (_pArr[Dong + iDem2][Cot - iDem2].getCheck() == 0)
+                if (getCheck(_pArr[Dong + iDem2][Cot - iDem2]._check) == 0)
                     break;
-                if (_pArr[Dong + iDem2][Cot - iDem2].getCheck() == -1)
+                if (getCheck(_pArr[Dong + iDem2][Cot - iDem2]._check) == -1)
                     iSoQuanDich2++;
             }
             break;
         }
-        if (_pArr[Dong + iDem][Cot - iDem].getCheck() == -1)
+        if (getCheck(_pArr[Dong + iDem][Cot - iDem]._check) == -1)
             iSoQuanDich++;
     }
-    for (int iDem = 1; iDem < 6 && Cot + iDem < _size && Dong - iDem >= 0; iDem++)
+    for (int iDem = 1; iDem < 6 && Cot + iDem < _b->_size && Dong - iDem >= 0; iDem++)
     {
-        if (_pArr[Dong - iDem][Cot + iDem].getCheck() == 1)
+        if (getCheck(_pArr[Dong - iDem][Cot + iDem]._check) == 1)
         {
             iSoQuanTa++;
             break;
         }
-        if (_pArr[Dong - iDem][Cot + iDem].getCheck() == 0)
+        if (getCheck(_pArr[Dong - iDem][Cot + iDem]._check) == 0)
         {
-            for (int iDem2 = 2; iDem < 7 && Cot + iDem2 < _size && Dong - iDem2 >= 0; iDem2++)
+            for (int iDem2 = 2; iDem < 7 && Cot + iDem2 < _b->_size && Dong - iDem2 >= 0; iDem2++)
             {
-                if (_pArr[Dong - iDem2][Cot + iDem2].getCheck() == 1)
+                if (getCheck(_pArr[Dong - iDem2][Cot + iDem2]._check) == 1)
                 {
                     iSoQuanTa2++;
                     break;
                 }
-                if (_pArr[Dong - iDem2][Cot + iDem2].getCheck() == 0)
+                if (getCheck(_pArr[Dong - iDem2][Cot + iDem2]._check) == 0)
                     break;
-                if (_pArr[Dong - iDem2][Cot + iDem2].getCheck() == -1)
+                if (getCheck(_pArr[Dong - iDem2][Cot + iDem2]._check) == -1)
                     iSoQuanDich2++;
             }
             break;
         }
-        if (_pArr[Dong - iDem][Cot + iDem].getCheck() == -1)
+        if (getCheck(_pArr[Dong - iDem][Cot + iDem]._check) == -1)
             iSoQuanDich++;
     }
 
@@ -1177,7 +1182,7 @@ long _Board::SoDiemPhongThu_DuyetCheo2(long Dong, long Cot, const long Defend_Sc
         iScoreTempCheoXuoi *= 2;
     return iScoreTempCheoXuoi;
 }
-_Point _Board::Tim_Kiem_NuocDi_1()
+_Point Tim_Kiem_NuocDi_1()
 {
     //Đây là điểm tại ô mà ta đang xét trên bàn cờ.
     _Point Oco;
@@ -1185,15 +1190,15 @@ _Point _Board::Tim_Kiem_NuocDi_1()
     //Ta sẽ dùng biến 'Diem' để tìm ra ô có điểm số cao nhất, ô nào có điểm số cao nhất sẽ được đánh X vào.
     long Diem = 0;
     //Dùng vòng lặp chay qua tất cả các ô trên bàn cờ.
-    for (int i = 0; i < _size; i++)
+    for (int i = 0; i < _b->_size; i++)
     {
-        for (int j = 0; j < _size; j++)
+        for (int j = 0; j < _b->_size; j++)
         {
             //Đặt điểm tấn công, điểm phòng thủ cho tất cả các ô này ban đầu bằng 0.
             long DiemTanCong = 0;
             long DiemPhongThu = 0;
             //Vì ta chỉ có thể tấn công hay phòng thủ ở những ô đang trống, lọc lấy những ô trống bằng dòng code _pArr[i][j].getCheck() == 0;
-            if (_pArr[i][j].getCheck() == 0)
+            if (getCheck(_pArr[i][j]._check) == 0)
             {
                 //Tính số điểm tấn công của ô trống bằng tổng tất cả số điểm tấn công của ô theo hàng, theo cột, theo đường chéo 1 và theo đường chéo 2.
                 //Số điểm tấn công của ô theo cột.
@@ -1245,29 +1250,37 @@ _Point _Board::Tim_Kiem_NuocDi_1()
         }
     }
     //Đánh X vào ô có điểm cao nhất (Ô mà tại đó biến 'Diem' có giá trị cao nhất).
-    Oco.setX(cot * 4 + 2);
+    setX(Oco._x = cot * 4 + 2);
     //Đánh Y vào ô có điểm cao nhất (Ô mà tại đó biến 'Diem' có giá trị cao nhất).
-    Oco.setY(dong * 2 + 1);
+    setY(Oco._y = dong * 2 + 1);
     return Oco;
 }
-
+template <class T>
+void setTurn(T* g) {
+    g->_turn = !g->_turn;
+}
+template <class T>
+void gsetCountXY(T* g) {
+    g->CountX = 0;
+    g->CountY = 0;
+}
 int PlayerVsCom(Diem& a, int load, char data[30])
 {
     int n = 99;
     int k = 1;
     HienTroChuot();
-    _Game g(SIZE, 0, 0);
-    g.setCountXY(); // Đếm số lượng x số lượng y.
+    setGame(SIZE, 0, 0);
+    gsetCountXY(g); // Đếm số lượng x số lượng y.
     //Người dùng load game để tiếp tục chơi.
     if (load == -4)
     {
-        g.LoadGame(data);
+        LoadGame(data);
     }
     //Tạo màn hình để chơi và set lượt chơi tùy vào chế độ.
     else
     {
-        g.startGame();
-        g.setTurn();
+        startGame();
+        setTurn();
     }
     //In bảng điểm ra màn hình.
     PrintScoreBoard();
@@ -1283,66 +1296,66 @@ int PlayerVsCom(Diem& a, int load, char data[30])
     //In điểm số 2
     cout << a.score2;
     gotoXY(2, 1);
-    while (g.isContinue())
+    while (isContinue())
     {
-        if (!g.getTurn())
+        if (!getTurn())
         {
             //Đặt vị trí đánh đầu tiên cho người.
-            if (g.DemNuocCoDaDi() == 0)
+            if (DemNuocCoDaDi() == 0)
             {
-                g.setX((SIZE * 4 / 2) - 2);
-                g.setY((SIZE * 2 / 2) - 1);
+                gsetX((SIZE * 4 / 2) - 2);
+                gsetY((SIZE * 2 / 2) - 1);
                 gotoXY((SIZE * 4 / 2) - 2, (SIZE * 2 / 2) - 1);
-                g.setCommand(13);
+                setCommand(13);
             }
             //Đặt vị trí đánh đầu tiên cho máy.
             else
             {
-                g.TimKiemNuocDi();
-                int x = g.getXatEnter();
-                int y = g.getYatEnter();
+                TimKiemNuocDi();
+                int x = getXatEnter();
+                int y = getYatEnter();
                 gotoXY(x, y);
                 Sleep(300);
-                g.setCommand(13);
+                setCommand(13);
             }
         }
         //Chờ lệnh nhận được từ bàn phím.
         else
-            g.waitKeyBoard();
+            waitKeyBoard();
         //Đọc phím ESC.
-        if (g.getCommand() == 27)
+        if (getCommand() == 27)
         {
             PlaySound(TEXT("move.wav"), NULL, SND_FILENAME | SND_ASYNC);
             return 27;
         }
         else
         {
-            switch (g.getCommand())
+            switch (getCommand())
             {
                 //Đọc phím A: dịch chuyển con trỏ trong bàn cờ sang trái 1 đơn vị.
             case 'A':
                 PlaySound(TEXT("move.wav"), NULL, SND_FILENAME | SND_ASYNC);
-                g.moveLeft();
+                moveLeft();
                 break;
                 //Đọc phím D: dịch chuyển con trỏ trong bàn cờ sang phải 1 đơn vị.
             case 'D':
                 PlaySound(TEXT("move.wav"), NULL, SND_FILENAME | SND_ASYNC);
-                g.moveRight();
+                moveRight();
                 break;
                 //Đọc phím W: dịch chuyển con trỏ trong bàn cờ đi lên 1 đơn vị.
             case 'W':
                 PlaySound(TEXT("move.wav"), NULL, SND_FILENAME | SND_ASYNC);
-                g.moveUp();
+                moveUp();
                 break;
                 //Đọc phím S: dịch chuyển con trỏ trong bàn cờ đi xuống 1 đơn vị.
             case 'S':
                 PlaySound(TEXT("move.wav"), NULL, SND_FILENAME | SND_ASYNC);
-                g.moveDown();
+                moveDown();
                 break;
                 //Đọc phím L: thực hiện lưu game hiện hành vào tập tin.
             case 'L':
                 PlaySound(TEXT("move.wav"), NULL, SND_FILENAME | SND_ASYNC);
-                g.SaveGame(-4);
+                SaveGame(-4);
                 break;
                 //Đọc phím T: thực hiện load game.
             case 'T':
@@ -1353,13 +1366,13 @@ int PlayerVsCom(Diem& a, int load, char data[30])
             case 13:
                 PlaySound(TEXT("move.wav"), NULL, SND_FILENAME | SND_ASYNC);
                 //Lấy ra giá trị (x,y) hiện tại của con trỏ trên bàn cờ.
-                int x = g.getXatEnter();
-                int y = g.getYatEnter();
+                int x = getXatEnter();
+                int y = getYatEnter();
                 //Hàm để đánh quân X ra màn hình vào trị trí hiện tại của con trỏ trên bàn cờ sau khi người chơi nahans phím Enter.
-                if (g.processCheckBoard())
+                if (processCheckBoard())
                 {
                     //Kiểm tra xem liệu người chơi hoặc máy có chiến thắng hay chưa?
-                    switch (g.processFinish(x, y))
+                    switch (processFinish(x, y))
                     {
                         //Trường hợp người chơi thắng:
                     case -1:
@@ -1454,19 +1467,19 @@ int PlayerVsPlayer(Diem& a, int load, char data[30])
     int k = 1;
     int n = 99;
     HienTroChuot();
-    _Game g(SIZE, 0, 0);
-    g.setCountXY();
+    setGame(SIZE, 0, 0);
+    setCountXY(g);
     if (load == -30)
     {
-        g.setTurn();
-        g.LoadGame(data);
+        setTurn();
+        LoadGame(data);
     }
     else if (load == -31)
     {
-        g.LoadGame(data);
+        LoadGame(data);
     }
     else
-        g.startGame();
+        startGame();
     PrintScoreBoard();
     Textcolor(244);
     gotoXY(SIZE * 4 + 32, 32);
@@ -1478,10 +1491,10 @@ int PlayerVsPlayer(Diem& a, int load, char data[30])
     gotoXY(SIZE * 4 + 30 + 18, 15);
     cout << a.score2;
     gotoXY(2, 1);
-    while (g.isContinue())
+    while (isContinue())
     {
-        g.waitKeyBoard();
-        if (g.getCommand() == 27)
+        waitKeyBoard();
+        if (getCommand() == 27)
         {
             PlaySound(TEXT("move.wav"), NULL, SND_FILENAME | SND_ASYNC);
             return 27;
@@ -1489,30 +1502,30 @@ int PlayerVsPlayer(Diem& a, int load, char data[30])
 
         else
         {
-            switch (g.getCommand())
+            switch (getCommand())
             {
             case 'A':
                 PlaySound(TEXT("move.wav"), NULL, SND_FILENAME | SND_ASYNC);
-                g.moveLeft();
+                moveLeft();
                 break;
             case 'D':
                 PlaySound(TEXT("move.wav"), NULL, SND_FILENAME | SND_ASYNC);
-                g.moveRight();
+                moveRight();
                 break;
             case 'W':
                 PlaySound(TEXT("move.wav"), NULL, SND_FILENAME | SND_ASYNC);
-                g.moveUp();
+                moveUp();
                 break;
             case 'S':
                 PlaySound(TEXT("move.wav"), NULL, SND_FILENAME | SND_ASYNC);
-                g.moveDown();
+                moveDown();
                 break;
             case 'G':
                 PlaySound(TEXT("move.wav"), NULL, SND_FILENAME | SND_ASYNC);
-                if (g.getTurn() == 1)
-                    g.SaveGame(-31);
+                if (getTurn() == 1)
+                    SaveGame(-31);
                 else
-                    g.SaveGame(-30);
+                    SaveGame(-30);
                 break;
             case 'L':
                 PlaySound(TEXT("move.wav"), NULL, SND_FILENAME | SND_ASYNC);
@@ -1520,11 +1533,11 @@ int PlayerVsPlayer(Diem& a, int load, char data[30])
                 break;
             case 13:
                 PlaySound(TEXT("move.wav"), NULL, SND_FILENAME | SND_ASYNC);
-                int x = g.getXatEnter();
-                int y = g.getYatEnter();
-                if (g.processCheckBoard())
+                int x = getXatEnter();
+                int y = getYatEnter();
+                if (processCheckBoard())
                 {
-                    switch (g.processFinish(x, y))
+                    switch (processFinish(x, y))
                     {
                     case -1:
                         a.score1++;
@@ -1600,42 +1613,43 @@ int PlayerVsPlayer(Diem& a, int load, char data[30])
     }
 }
 
-_Game::_Game(int pSize, int pLeft, int  pTop)
+void setGame(int pSize, int pLeft, int  pTop)
 {
-    _b = new _Board(pSize, pLeft, pTop);
-    _loop = _turn = true;
-    _command = -1;
-    _x = pLeft;
-    _y = pTop;
+    _b = new _Board;
+    setBoard(pSize, pLeft, pTop);
+    g->_loop = g->_turn = true;
+    g->_command = -1;
+    g->_x = pLeft;
+    g->_y = pTop;
 }
 //Hàm bắt phím vừa được nhập từ bàn phím.
-int _Game::getCommand() { return _command; }
+int getCommand() { return g->_command; }
 //Hmaf trả về kết quả liệu người chơi có muốn chơi tiếp hay thoát game? (Nếu _loop=1 -> Chơi tiếp, _loop=0 -> Thoát game).
-bool _Game::isContinue() { return _loop; }
+bool isContinue() { return g->_loop; }
 //Hàm để chờ người chơi nhập phím bất kì từ Keyboard.
-char _Game::waitKeyBoard()
+char waitKeyBoard()
 {
-    _command = toupper(_getch());
-    return _command;
+    g->_command = toupper(_getch());
+    return g->_command;
 }
 //Hàm đặt vị trí hiện thông báo liệu người chơi liệu muốn chơi tiếp hay thoát game?
-char _Game::askContinue()
+char askContinue()
 {
-    gotoXY(0, _b->getYAt(_b->getSize() - 1, _b->getSize() - 1) + 4);
+    gotoXY(0, getYAt(getSize(_b) - 1, getSize(_b) - 1) + 4);
     return waitKeyBoard();
 }
 //Hàm để bắt đầu 1 game mới.
-void _Game::startGame()
+void startGame()
 {
     system("cls");
     //Reset lại toàn bộ dữ liệu (Tất cả các ô trên bàn cờ đều là ô trống -> check=0).
-    _b->resetData();
+    resetData();
     //Vẽ bàn cờ.
     drawBoard();
-    _x = _b->getXAt(0, 0);
-    _y = _b->getYAt(0, 0);
+    g->_x = getXAt(0, 0);
+    g->_y = getYAt(0, 0);
     //Nếu là lượt của người chơi O.
-    if (_turn == 1)
+    if (g->_turn == 1)
     {
         Textcolor(Blue);
         gotoXY(SIZE * 4 + 32, 26);
@@ -1656,48 +1670,48 @@ void _Game::startGame()
     cout << _b->CountY;
 }
 //Nếu người chơi chọn thoát game thì gán _loop=0 để thực hiện thoát game.
-void _Game::exitGame()
+void exitGame()
 {
-    _loop = false;
+    g->_loop = false;
 }
 //Hàm để di chuyển con trỏ trong bàn cờ sang phải 1 đơn vị.
-void _Game::moveRight()
+void moveRight()
 {
-    if (_x < _b->getXAt(_b->getSize() - 1, _b->getSize() - 1))
+    if (g->_x < getXAt(getSize(_b) - 1, getSize(_b) - 1))
     {
-        _x += 4;
-        gotoXY(_x, _y);
+        g->_x += 4;
+        gotoXY(g->_x, g->_y);
     }
 }
 //Hàm để di chuyển con trỏ trong bàn cờ sang trái 1 đơn vị.
-void _Game::moveLeft() {
-    if (_x > _b->getXAt(0, 0))
+void moveLeft() {
+    if (g->_x > getXAt(0, 0))
     {
-        _x -= 4;
-        gotoXY(_x, _y);
+        g->_x -= 4;
+        gotoXY(g->_x, g->_y);
     }
 }
 //Hàm để di chuyển con trỏ trong bàn cờ đi xuống 1 đơn vị.
-void _Game::moveDown() {
-    if (_y < _b->getYAt(_b->getSize() - 1, _b->getSize() - 1))
+void moveDown() {
+    if (g->_y < getYAt(getSize(_b) - 1, getSize(_b) - 1))
     {
-        _y += 2;
-        gotoXY(_x, _y);
+        g->_y += 2;
+        gotoXY(g->_x, g->_y);
     }
 }
 //Hàm để di chuyển con trỏ trong bàn cờ đi lên 1 đơn vị.
-void _Game::moveUp() {
-    if (_y > _b->getYAt(0, 0))
+void moveUp() {
+    if (g->_y > getYAt(0, 0))
     {
-        _y -= 2;
-        gotoXY(_x, _y);
+        g->_y -= 2;
+        gotoXY(g->_x, g->_y);
     }
 }
 //Hàm để đánh quân X hoặc O vào vị trí hiện tại của con trỏ trên bàn cờ.
-bool _Game::processCheckBoard()
+bool processCheckBoard()
 {
     //Check xem ô đang chứa con trỏ được chọn trong bàn cờ chứa giá trị X hay O?
-    switch (_b->checkBoard(_x, _y, _turn))
+    switch (checkBoard(g->_x, g->_y, g->_turn))
     {
         //Nếu là chứa giá trị X:
     case -1:
@@ -1713,7 +1727,7 @@ bool _Game::processCheckBoard()
         //Sau khi X đánh xong, hiện ra chữ đến lượt người chơi tiếp theo.
         cout << " Den luot PLAYER 2 ";
 
-        gotoXY(_x, _y);
+        gotoXY(g->_x, g->_y);
         break;
         //Nếu là chứa giá trị O:
     case 1:
@@ -1739,16 +1753,16 @@ bool _Game::processCheckBoard()
     return true;
 }
 //Hàm để đếm tổng số nước cờ đã đi.
-int _Game::DemNuocCoDaDi()
+int DemNuocCoDaDi()
 {
     return _b->CountX + _b->CountY;
 }
 //Hàm để kiểm tra xem liệu người chơi X thắng, hay người chơi O thắng, hay 2 người chơi X và O hòa nhau -> Từ đó in kết quả ra màn hình.
-int _Game::processFinish(int x, int y)
+int processFinish(int x, int y)
 {
-    gotoXY(0, _b->getYAt(_b->getSize() - 1, _b->getSize() - 1) + 2);
+    gotoXY(0, getYAt(getSize(_b) - 1, getSize(_b) - 1) + 2);
     //Hàm kiểm tra xem người chơi X hay O thắng?
-    int pWhoWin = _b->testBoard(x, y);
+    int pWhoWin = testBoard(x, y);
     switch (pWhoWin)
     {
         //Trường hợp người chơi X thắng, hiện ra màn hình P1 chiến thắng và lưu kết quả vào lịch sử.
@@ -1768,34 +1782,32 @@ int _Game::processFinish(int x, int y)
         break;
         //Trường hợp chưa có 2 chiến thắng, đổi lượt để người chơi tiếp theo đánh.
     case 2:
-        _turn = !_turn;
+        g->_turn = !g->_turn;
     }
-    gotoXY(_x, _y);// Trả về vị trí hiện hành của con trỏ màn hình bàn cờ
+    gotoXY(g->_x, g->_y);// Trả về vị trí hiện hành của con trỏ màn hình bàn cờ
     return pWhoWin;
 }
 //Hàm lấy giá trị x.
-int _Game::getXatEnter()
+int getXatEnter()
 {
-    return _x;
+    return g->_x;
 }
 //Hàm lấy giá trị y.
-int _Game::getYatEnter()
+int getYatEnter()
 {
-    return _y;
+    return g->_y;
 }
 //Hàm tìm kiếm nước đi cho máy dựa vào hàm Tim_Kiem_NuocDi_1() đã được xây dựng ở trên.
-void _Game::TimKiemNuocDi()
+void TimKiemNuocDi()
 {
-    _x = _b->Tim_Kiem_NuocDi_1().getX();
-    _y = _b->Tim_Kiem_NuocDi_1().getY();
-}
-_Game::~_Game()
-{
-    delete _b;
+    _Point temp = Tim_Kiem_NuocDi_1();
+    g->_x = getX(temp._x);
+    g->_y = getY(temp._y);
 }
 //Hàm viết kết quả trò chơi vào Lịch sử.
-void _Game::LichSuGame(int n)
+void LichSuGame(int n)
 {
+    Diem a = { 0 };
     string data;
     ofstream f1;
     ofstream f2;
@@ -1808,12 +1820,12 @@ void _Game::LichSuGame(int n)
     f2.open("Lich Su.txt", ios::app);
     f2 << data << " " << endl;
     //thong tin
-    f1 << scorep1 << " " << scorep2 << " " << n << endl;
+    f1 << a.score1 << " " << a.score2 << " " << n << endl;
     for (int i = 0; i < 16; i++)
     {
         for (int j = 0; j < 16; j++)
         {
-            f1 << _b->get_Check(i, j) << " ";
+            f1 << get_Check(i, j) << " ";
         }
         f1 << endl;
     }
@@ -1838,8 +1850,9 @@ void _Game::LichSuGame(int n)
     }
 }
 //Hàm Save game để có thể tiếp tục chơi tiếp mỗi khi thoát game.
-void _Game::SaveGame(int n)
+void SaveGame(int n)
 {
+    Diem a = { 0 };
     char data[30];
     ofstream f1;
     ofstream f2;
@@ -1851,12 +1864,12 @@ void _Game::SaveGame(int n)
     f2.open("Name.txt", ios::app);
     f2 << data << " " << endl;
     //thong tin
-    f1 << scorep1 << " " << scorep2 << " " << n << endl;
+    f1 << a.score1 << " " << a.score2 << " " << n << endl;
     for (int i = 0; i < 16; i++)
     {
         for (int j = 0; j < 16; j++)
         {
-            f1 << _b->get_Check(i, j) << " ";
+            f1 << get_Check(i, j) << " ";
         }
         f1 << endl;
     }
@@ -1882,9 +1895,9 @@ void _Game::SaveGame(int n)
     }
 }
 //Hàm Load dữ liệu game từ tập tin mỗi khi người chơi muốn chơi tiếp sau khi thoát game để có thể tiếp tục chơi ở dữ liệu cũ.
-void _Game::LoadGame(char data[30])
+void LoadGame(char data[30])
 {
-
+    Diem a;
     //NHAP FILE
     ifstream f;
     f.open(data, ios::in);
@@ -1894,7 +1907,7 @@ void _Game::LoadGame(char data[30])
     }
     else
     {
-        f >> scorep1 >> scorep2 >> chedo;
+        f >> a.score1 >> a.score2 >> g->chedo;
         system("cls");
         //thong tin
         //ban co
@@ -1904,11 +1917,11 @@ void _Game::LoadGame(char data[30])
             for (int j = 0; j < SIZE; j++)
             {
                 f >> k;
-                _b->loadData(i, j, k);
+                loadData(i, j, k);
             }
         }
-        _x = _b->getXAt(0, 0);
-        _y = _b->getYAt(0, 0);
+        g->_x = getXAt(0, 0);
+        g->_y = getYAt(0, 0);
         drawBoard();
         f.close();
     }
@@ -1918,7 +1931,7 @@ void _Game::LoadGame(char data[30])
     Textcolor(Red);
     gotoXY(SIZE * 4 + 30 + 12, 14);
     cout << _b->CountY;
-    if (_turn == 1)
+    if (g->_turn == 1)
     {
         Textcolor(Blue);
         gotoXY(SIZE * 4 + 32, 26);
