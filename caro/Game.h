@@ -1,13 +1,10 @@
-﻿#pragma once
+#pragma once
 #include <iostream>
 #include <Windows.h>
 #include <conio.h>
 #include <mmsystem.h>
 #include <vector>
 #include <fstream>
-#include "Menu.h"
-#include "Board.h"
-#include <string.h>
 using namespace std;
 struct Diem
 {
@@ -50,7 +47,7 @@ private:
 	int _top;
 	// Tọa độ phía bên trái và trên bàn cờ.
 	_Point** _pArr;
-	// Mảng 2 chiều để chuyển đổi tọa độ (x,y) thành các ô trong mảng 2 chiều .
+	// Mảng 2 chiều để chuyển đổi tọa độ (x,y) thành các ô trong mảng 2 chiều.
 public:
 	int getSize();
 	// Lấy giá trị _size
@@ -82,7 +79,7 @@ public:
 	long SoDiemPhongThu_DuyetCheo2(long, long, const long Defend_Score[], const long Attack_Score[]);
 	// Duyệt Các Ô Trống tính điểm cho từng ô theo dọc , ngang , chéo ngược , chéo xuôi.
 public:
-	int checkWinRow(int x, int y, int value); // value (-1 hoac 1 ) hay X hoac O
+	int checkWinRow(int x, int y, int value); // value (-1 hoac 1) hay X hoac O
 	// Kiểm tra thắng theo dòng
 	int checkWinCol(int x, int y, int value);
 	// Kiểm tra thắng theo cột
@@ -93,24 +90,25 @@ public:
 	int CountX; // Đếm nước cờ X
 	int CountY; // Đếm nước cờ O
 public:
-	_Board();
-	_Board(int pSize, int pX, int pY);
+	_Board(); // Xóa mảng 2 chiều chuyển đổi tạo độ.
+	_Board(int pSize, int pX, int pY); // Tạo mảng 2 chiều để chuyển đổi tọa độ (x,y) thành các ô trong mảng.
 	~_Board();
 };
+
 struct _Game
 {
 	_Board* _b;		// Khởi tạo 1 bàn cờ
 	bool _turn;		// True là lượt người chơi 1 , false là người chơi 2.
 	int _x, _y;		// Tọa độ
 	int _command;	// Nhận phím
-	bool _loop;		// True chơi tiếp, False Out.
+	bool _loop;		// True chơi tiếp, False out.
 	int scorep1;  // Số trận thắng P1
 	int scorep2;// Số trận thắng P2
 	int chedo; // Đọc file để nhận biết chế độ chơi
 	// -31 : Chế độ P vs P đang đến lượt X
 	// -30 : Chế độ P vs P đang đến lượt O
-	// -4  : Chế độ P vs Bot (Dễ ) đang đến lượt X
-	// -5  : Chế độ P vs Bot (Khó ) đang đến lượt X
+	// -4  : Chế độ P vs Bot (Dễ) đang đến lượt X
+	// -5  : Chế độ P vs Bot (Khó) đang đến lượt X
 public:
 	void setCountXY() {
 		_b->CountX = 0;
@@ -174,9 +172,8 @@ public:
 
 
 
-const long Defend_Score1[7] = { 0, 6, 768, 49152, 3145728, 201326592 };
-const long Attack_Score1[7] = { 0, 48, 6144, 393216, 25165824, 1610612736 };
-
+const long Defend_Score1[7] = { 0, 24, 3072, 196608, 12582912, 805306368 };
+const long Attack_Score1[7] = { 0, 192, 24576, 1572864, 100663296, 6442450944 };
 
 
 //const  long Defend_Score1[7] = { 0, 8, 512, 32768, 2097152, 134217728 };
