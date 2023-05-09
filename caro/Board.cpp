@@ -1,4 +1,4 @@
-﻿#include "Board.h"
+#include "Board.h"
 void PrintScoreBoard()
 {
     // Bang 1
@@ -93,7 +93,71 @@ void PrintScoreBoard()
 
     gotoXY(2, 1);
 } // IN BANG DIEM
+void Draw(int i, int x, int y) {
+    fstream file;
+    string line;
+    file.open(file_name[i], ios::in);
+    while (!file.eof()) {
+        getline(file, line);
+        gotoXY(x, y);
+        for (int j = 0; j < line.length(); j++)
+        {
+            if (line[j] == '.')
+            {
+                Textcolor(15);
+                cout << char(219);
+            }
+            else if (line[j] == '+')
+            {
+                Textcolor(FullRed);
+                cout << line[j];
+            }
+            else if (line[j] == '~')
+            {
+                Textcolor(FullGreen);
+                cout << line[j];
+            }
+            else if (line[j] == '@')
+            {
+                Textcolor(FullYellow);
+                cout << line[j];
+            }
+            else if (line[j] == '^')
+            {
+                Textcolor(FullBlue);
+                cout << line[j];
+            }
+            else if (line[j] == '*')
+            {
+                Textcolor(0);
+                cout << line[j];
+            }
+            else if (line[j] == '8')
+            {
+                Textcolor(FullAzure);
+                cout << line[j];
+            }
+            else if (line[j] == '/')
+            {
+                Textcolor(FullAzure);
+                cout << char(254);
+            }
+            else if (line[j] == '|')
+            {
+                Textcolor(Red);
+                cout << char(003);
+            }
+            else
+            {
+                Textcolor(Black);
+                cout << line[j];
+            }
+        }
+        y += 1;
 
+    }
+    file.close();
+}
 void drawBoard()
 {
     system("color FA");
@@ -178,4 +242,73 @@ void box()
     Textcolor(Red);
     gotoXY(35, j + 19);
     cout << "ESC : BACK";
+}
+void LoadingGame()
+{   
+    AnTroChuot();
+    fstream file;
+    string line;
+    for (int l = 0; l < 10; l++)
+    {
+        int x = 30, y = 10;
+        file.open("Loading.txt", ios::in);
+        while (!file.eof()) {
+            getline(file, line);
+            gotoXY(x, y);
+            if (line == "load") {
+                y = 9;
+                Sleep(150);
+            }
+            else {
+                for (int j = 0; j < line.length(); j++)
+                {
+                    if (line[j] == '.')
+                    {
+                        Textcolor(15);
+                        cout << char(219);
+                    }
+                    else if (line[j] == 'x')
+                    {
+                        Textcolor(Blue);
+                        cout << char(254);
+                    }
+                    else if (line[j] == '=')
+                    {
+                        Textcolor(FullRed);
+                        cout << char(219);
+                    }
+                    else if (line[j] == '0')
+                    {
+                        Textcolor(Grey);
+                        cout << char(219);
+                    }
+                    else if (line[j] == '+')
+                    {
+                        Textcolor(rand() % 100);
+                        cout << line[j];
+                    }
+                    else if (line[j] == '~')
+                    {
+                        Textcolor(rand() % 100);
+                        cout << line[j];
+                    }
+                    else if (line[j] == '@')
+                    {
+                        Textcolor(rand() % 100);
+                        cout << line[j];
+                    }
+                    else if (line[j] == '^')
+                    {
+                        Textcolor(rand() % 100);
+                        cout << line[j];
+                    }
+
+                }
+
+            }
+            y += 1;
+        }
+        file.close();
+    }
+    ClearConsole();
 }
