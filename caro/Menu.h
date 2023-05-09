@@ -37,13 +37,14 @@ static int numItems = sizeof(menuItems) / sizeof(menuItems[0]);
 static int currentSelection = 0;
 
 //Dinh nghia file ve
-static string file_name[] = { "Caro.txt", "P1.txt", "P2.txt", "Draw.txt" };
+static string file_name[] = { "Caro.txt", "P1.txt", "P2.txt", "Draw.txt", "About.txt" };
+
 void HienTroChuot();
 void AnTroChuot();
 void SetConsole(int width, int height);
 void Textcolor(int color);
 void gotoXY(int x, int y);
-void playSound(int i, char c);
+int playSound(int i, char c = 'o');
 int getConsoleInput();
 void menu();
 void Draw(int i, int x, int y);  // ve file ten gi va vi tri x y de in
@@ -55,5 +56,4 @@ int ReadChedo(char a[30]); //Tìm kiếm file người dùng (hỗ trợ hàm Lo
 void ReadNameFile(); //Hiển thị các người dùng đã lưu
 void LoadLoad(); // Mở file người chơi đã lưu
 void Instruction(); //Mục Giới thiệu
-void History(); //Mục history
-
+void History(); //Mục history#pragma once
