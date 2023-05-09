@@ -43,18 +43,14 @@ void gotoXY(int x, int y)
     SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coord);
 }
 
-int playSound(int i, char c)
-{
+void playSound(int i) {
     static vector<const wchar_t*> soundFile{ L"beep.wav", L"move.wav",
-        L"tick.wav", L"votay.wav", L"win.wav", L"win1.wav", L"background.wav" };
-    if (c == 77 || c == 109) {
-        return 0;
-    }
-    if (c == 78 || c == 110) {
+       L"tick.wav", L"votay.wav", L"win.wav", L"win1.wav", L"background.wav" };
+    if (isSoundOn == true) {
         PlaySound(soundFile[i], NULL, SND_FILENAME | SND_ASYNC);
     }
+    else return;
 }
-
 int getConsoleInput() {
     int c = _getch();
     if (c == 0 || c == 224)
@@ -89,10 +85,14 @@ int getConsoleInput() {
             return 6;
         else if (c == 72 || c == 104) //H, h
             return 7;
-        else if (c == 77 || c == 109)//M, m turn off sound
+        else if (c == 77 || c == 109) //M, m turn off sound
+        {
             return 8;
+        }
         else if (c == 78 || c == 110) //N, n turn on sound
+        {
             return 9;
+        }
         else
             return 0;
     }
@@ -363,25 +363,31 @@ void menu()
     cout << "Enter : Select ";
     gotoXY(x, y + numItems + 9);
     cout << "M: mute";
-    cout << "M: mute";
 
     char ch = ' '; // Initialize character input variable
-
+    playSound(6);
     // Main loop to handle user input and menu selection
     while (ch != 'x') // Loop until user inputs 'x' to exit
     {
-        //playSound(6, 'n');
+       
         int input = 0;
         input = getConsoleInput(); // Get keyboard input
 
         // Clear current selection
+        
         Textcolor(Black);
         gotoXY(x, y + currentSelection);
         cout << menuItems[currentSelection];
-        if (input == 9 || ch == 'n')
-        {
-            playSound(6, 'n');
+        if (input == 9) {
+            isSoundOn = true;
+            playSound(6);
         }
+        if (input == 8)
+        {
+            isSoundOn = false;
+            PlaySound(0, 0, 0);
+        }
+
         if (input == 5 || ch == 's')
         {
             // Move down one row
@@ -391,10 +397,6 @@ void menu()
         {
             // Move up one row
             currentSelection = (currentSelection - 1 + numItems) % numItems;
-        }
-        else if (input == 8 || ch == 'm')
-        {
-            playSound(0, 'm');
         }
         else if (input == 6 || ch == '\r') // Check for Enter key press
         {
@@ -455,15 +457,13 @@ void menu()
                 break;
             }
             case 6:
+            {
+                ClearConsole();
+                exit(0);
                 // Exit program
                 ch = 'x';
                 break;
-                /* case 8:
-                playSound(1, 'm');
-                break;
-                case 9:
-                playSound(6);
-                break;*/
+            }
             }
         }
 
