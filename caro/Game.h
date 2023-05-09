@@ -22,19 +22,19 @@ struct _Point
 	int _check;
 	// Biến nhận biết X và O ( -1 = X , 1 = O, 0 = Ô trống )
 };
-static _Point* point;
+//static _Point* point;
 static _Point** _pArr;
-	bool setCheck(int);
+	bool setCheck(int pCheck, int i, int j);
 	// Cài đặt biến _check
-	int getX(int x);
+	int getX(int i, int j);
 	// Lấy giá trị của _x
-	int getY(int y);
+	int getY(int i, int j);
 	// Lấy giá trị của _y
-	int getCheck(int check);
+	int getCheck(int i, int j);
 	// Lấy giá trị của _check
-	void setX(int);
+	void setX(int pX, int i, int j);
 	// Cài đặt biến _x
-	void setY(int);
+	void setY(int pY, int i, int j);
 	// Cài đặt biến _y
 
 	//setPoint(int, int);
@@ -65,7 +65,7 @@ static _Point** _pArr;
 	int getXAt(int, int);
 	int getYAt(int, int);
 	// Lấy tọa độ x,y tại vị trí i,j trên bàn cờ mảng 2 chiều _pArr
-	static int get_Check(int i, int j) { return getCheck(_pArr[i][j]._check); }
+	static int get_Check(int i, int j) { return getCheck(i,j); }
 	// Lấy giá trị _check trên mảng 2 chiều . nhận biết X O và ô trống.
 	void loadData(int, int, int);
 	// Load dữ liệu 
@@ -117,6 +117,8 @@ static _Point** _pArr;
 		int CountY;
 	};
 	static _Game* g;
+
+
 	// Cài đặt biến đếm nước cờ X và Y = 0.
 	//int getChedo() { return g->chedo; }
 	// Nhận biết chế độ .
