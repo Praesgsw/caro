@@ -1846,11 +1846,11 @@ void SaveGame(int n) {
             if (strcmp(data, line) == 0) {
                 flag = true;
                 clearConsoleLine(SIZE * 2 + 1);
-                gotoXY(35, SIZE * 2 + 3);
+                gotoXY(35, SIZE * 2 + 2);
                 cout << "ERROR: File name already exists. Please choose another name.\n";
                 break;
             }
-            else   clearConsoleLine(SIZE * 2 + 3);
+            else   clearConsoleLine(SIZE * 2 + 2);
         }
     } while (flag == true);
     f2.close();
