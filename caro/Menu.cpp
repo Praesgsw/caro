@@ -337,7 +337,7 @@ void menu()
     size_t size = menuItems[0].size();
     Textcolor(Red); gotoXY(x, y); cout << menuItems[0];
     
-    for (int i = 1; i < numItems; i++)
+    for (int i = 0; i < numItems; i++)
     {
         Textcolor(Black);
         gotoXY(x, y + i);
