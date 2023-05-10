@@ -104,7 +104,6 @@ static _Point** _pArr;
 		
 		bool _turn;		// True là lượt người chơi 1 , false là người chơi 2.
 		int _x, _y;		// Tọa độ
-		int _command;	// Nhận phím
 		bool _loop;		// True chơi tiếp, False out.
 		int scorep1;  // Số trận thắng P1
 		int scorep2;// Số trận thắng P2
@@ -128,14 +127,8 @@ static _Point** _pArr;
 	static void setScore1() { g->scorep1 = 0; }
 	static void setScore2() { g->scorep2 = 0; }
 	// Cài đặt tỉ số thắng = 0 .
-	static int getCommand();
-	// Lấy giá trị của phím nhập vào .
-	static void setCommand(int x) { g->_command = x; }
-	// Cài đặt phím nhập vào
 	static bool isContinue();
 	// Trò chơi tiếp tục
-	static char waitKeyBoard();
-	// Chờ nhập phím
 	static char askContinue();
 	// Chơi lại hay không ?
 
@@ -190,3 +183,11 @@ int PlayerVsPlayer(Diem& a, int, char data[30]); // P VS P
 
 template <class T>
 static void gsetCountXY(T* g);
+
+void Box();
+void PvPaskForRestart(Diem& a, int& load, char data[30]);
+void PvCaskForRestart(Diem& a, int& load, char data[30]);
+
+static int input = -1;
+
+void clearConsoleLine(int y);
