@@ -237,8 +237,10 @@ int readMode(char a[30])
     if (!f) {
         /*playSound(7);*/
         Textcolor(Black);
-        gotoXY(65, 34);
+        gotoXY(58, 33);
         cout << " FILE KHONG TON TAI!" << endl;
+        Sleep(400);
+        Load();
         int y = 31;
         Textcolor(Grey);
         gotoXY(60, 38);  cout << "   S   ";
