@@ -1,7 +1,7 @@
 #include "Game.h"
 #include "Menu.h"
 #include "Board.h"
-
+#include <string.h>
 template <class T>
 void setCountXY(T* _b) {
     _b->CountX = 0;
@@ -211,7 +211,7 @@ int checkWinRow(int x, int y, int value)
     if (test == 1)
     {
         //Nổi nhạc chiến thắng/
-        PlaySound(TEXT("move.wav"), NULL, SND_FILENAME | SND_ASYNC);
+        playSound(4);
         //Dùng vòng lặp để đổi màu 5 quân X (hoặc O) chiến thắng.
         while (loop < 30)
         {
@@ -270,7 +270,6 @@ int checkWinCol(int x, int y, int value) // Xet chien thang theo hang doc
         test = 0;
     if (test == 1)
     {
-        // PlaySound(TEXT("win.wav"), NULL, SND_FILENAME | SND_ASYNC);
         while (loop < 30)
         {
             Textcolor(rand() % 15 + 1);
@@ -333,7 +332,6 @@ int checksecondDiagonal(int x, int y, int value)
         test = 0;
     if (test == 1)
     {
-        PlaySound(TEXT("move.wav"), NULL, SND_FILENAME | SND_ASYNC);
         while (loop < 30)
         {
             Textcolor(rand() % 15 + 1);
@@ -395,7 +393,6 @@ int checkfirstDiagonal(int x, int y, int value)
         test = 0;
     if (test == 1)
     {
-        PlaySound(TEXT("move.wav"), NULL, SND_FILENAME | SND_ASYNC);
         while (loop < 30)
         {
             Textcolor(rand() % 15 + 1);
@@ -1264,12 +1261,221 @@ void gsetCountXY(T* g) {
     g->CountX = 0;
     g->CountY = 0;
 }
+void clearConsoleLine(int y) {
+    COORD position = { 0, y };
+    DWORD count;
+    CONSOLE_SCREEN_BUFFER_INFO info;
+    GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &info);
+    FillConsoleOutputCharacter(GetStdHandle(STD_OUTPUT_HANDLE), ' ', info.dwSize.X, position, &count);
+    SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), position);
+}
+int PlayerVsPlayer(Diem& a, int load, char data[30])
+{
+    int k = 1;
+    showCur();
+    setGame(SIZE, 0, 0);
+    setCountXY(g);
+    setCountXY(_b);
+    if (load == -30)
+    {
+        setTurn();
+        LoadGame(data);
+    }
+    else if (load == -31)
+    {
+        setTurn();
+        LoadGame(data);
+    }
+    else
+        startGame();
+    PrintScoreBoard();
+    Textcolor(244);
+    gotoXY(SIZE * 4 + 32, 32);
+    cout << " PLAYER VS PLAYER ";
+    Textcolor(Blue);
+    gotoXY(SIZE * 4 + 30 + 19, 6);
+    //In điểm số 1.
+    cout << a.score1;
+    Textcolor(Red);
+    gotoXY(SIZE * 4 + 30 + 19, 19);
+    //In điểm số 2
+    cout << a.score2;
+    gotoXY(2, 1);
+    while (isContinue())
+    {
+            auto input = getConsoleInput();
+                    //Đọc phím A: dịch chuyển con trỏ trong bàn cờ sang trái 1 đơn vị.
+             if (input == 3)
+                {
+                    moveLeft();
+                }
+                    //Đọc phím D: dịch chuyển con trỏ trong bàn cờ sang phải 1 đơn vị.
+             if (input == 4)
+                {
+                    moveRight();
+                }
+                    //Đọc phím W: dịch chuyển con trỏ trong bàn cờ đi lên 1 đơn vị.
+             if (input == 2)
+                {
+                    moveUp();
+                }
+                    //Đọc phím S: dịch chuyển con trỏ trong bàn cờ đi xuống 1 đơn vị.
+             if (input == 5)
+                {
+                    moveDown();
+                }
+                    //Đọc phím L: thực hiện lưu game hiện hành vào tập tin.
+             if (input == 7)
+                {
+                 playSound(2);
+                    if (getTurn() == 1)
+                        SaveGame(-31);
+                    else
+                        SaveGame(-30);
+
+                }
+                    //Đọc phím T: thực hiện load game.
+             if (input == 10)
+                {
+                 playSound(2);
+                    Load();
+                }
+                    //Đọc phím Enter: thực hiện đánh quân X vào vị trí hiện tại của con trỏ trên bàn cờ.
+             if (input == 6)
+                {
+                 playSound(2);
+                    int x = getXatEnter();
+                    int y = getYatEnter();
+                    if (processCheckBoard())
+                    {
+                        switch (processFinish(x, y))
+                        {
+                        case -1:
+                        {
+                            playSound(4);
+                            a.score1++;
+                            PvPaskForRestart(a, load, data);
+                            break;
+                        }
+                        case 1:
+                        {
+                            playSound(4);
+                            a.score2++;
+                            PvPaskForRestart(a, load, data);
+                            break;
+                        }
+                        case 0:
+                        {
+                            playSound(4);
+                            PvPaskForRestart(a, load, data);
+                            break;
+                        }
+                        }
+                    }
+
+                }
+             if (input == 1)
+             {
+                 playSound(2);
+                 gotoXY(50, 42); cout << "You should game before you exit. Would you to exit game?";
+                 gotoXY(50, 43); cout << "Y: Yes           N: No";
+                 do {
+                     int yn = getConsoleInput();
+                     if (yn == 11 || yn == 9)
+                     {
+                         if (yn == 9) {
+                             clearConsoleLine(42);
+                             clearConsoleLine(43);
+                             int x = getXatEnter();
+                             int y = getYatEnter();
+                             gotoXY(x, y);
+                             break;
+                         }
+                         else {
+                             return 27;
+                         }
+                     }
+                 } while (true);
+             }
+    }
+}
+
+void PvPaskForRestart(Diem &a,int& load, char data[30])
+{
+    int k = 1;
+    while (k)
+    {
+        int input = getConsoleInput();
+        if (input == 11)
+        {
+            playSound(2);
+            load = 0;
+            PlayerVsPlayer(a, load, data);
+        }
+        else if(input == 1)
+        {
+            playSound(2);
+            clearConsole();
+            menu();
+        }
+    }
+}
+void PvCaskForRestart(Diem& a, int& load, char data[30])
+{
+    int k = 1;
+    while (k)
+    {
+        int input = getConsoleInput();
+        if (input == 11)
+        {
+            playSound(2);
+            load = 0;
+            PlayerVsCom(a, load, data);
+        }
+        else if (input == 1)
+        {
+            playSound(2);
+            clearConsole();
+            menu();
+        }
+    }
+}
+void enterCom(Diem& a, int load, char data[30]) {
+        int x = getXatEnter();
+        int y = getYatEnter();
+        if (processCheckBoard())
+        {
+            switch (processFinish(x, y))
+            {
+            case -1:
+            {
+                playSound(4);
+                a.score1++;
+                PvCaskForRestart(a, load, data);
+                break;
+            }
+            case 1:
+            {
+                playSound(4);
+                a.score2++;
+                PvCaskForRestart(a, load, data);
+                break;
+            }
+            case 0:
+            {
+                playSound(4);
+                PvCaskForRestart(a, load, data);
+                break;
+            }
+            }
+        }
+}
 int PlayerVsCom(Diem& a, int load, char data[30])
 {
-    int n = 99;
     int k = 1;
-    HienTroChuot();
+    showCur();
     setGame(SIZE, 0, 0);
+    setCountXY(_b);
     setCountXY(g); // Đếm số lượng x số lượng y.
     //Người dùng load game để tiếp tục chơi.
     if (load == -4)
@@ -1300,322 +1506,92 @@ int PlayerVsCom(Diem& a, int load, char data[30])
     {
         if (!getTurn())
         {
-            //Đặt vị trí đánh đầu tiên cho người.
+            //Đặt vị trí đánh đầu tiên cho người cho may
             if (DemNuocCoDaDi() == 0)
             {
                 gsetX((SIZE * 4 / 2) - 2);
                 gsetY((SIZE * 2 / 2) - 1);
                 gotoXY((SIZE * 4 / 2) - 2, (SIZE * 2 / 2) - 1);
-                setCommand(13);
+                enterCom(a, load, data);
             }
             //Đặt vị trí đánh đầu tiên cho máy.
-            else
+            else 
             {
-                TimKiemNuocDi();
+				TimKiemNuocDi();
                 int x = getXatEnter();
                 int y = getYatEnter();
                 gotoXY(x, y);
-                Sleep(300);
-                setCommand(13);
+                enterCom(a, load, data);
             }
         }
-        //Chờ lệnh nhận được từ bàn phím.
-        else
-            waitKeyBoard();
-        //Đọc phím ESC.
-        if (getCommand() == 27)
+        int input = getConsoleInput();
+        if (input == 7)
+                {
+                    SaveGame(-4);
+                }
+        if (input == 1)
         {
-            PlaySound(TEXT("move.wav"), NULL, SND_FILENAME | SND_ASYNC);
-            return 27;
+            playSound(2);
+            gotoXY(50, 42); cout << "You should game before you exit. Would you to exit game?";
+            gotoXY(50, 43); cout << "Y: Yes           N: No";
+            do {
+                int yn = getConsoleInput();
+                if (yn == 11 || yn == 9)
+                {
+                    if (yn == 9) {
+                        clearConsoleLine(42);
+                        clearConsoleLine(43);
+                        int x = getXatEnter();
+                        int y = getYatEnter();
+                        gotoXY(x, y);
+                        break;
+                    }
+                    else {
+                        return 27;
+                    }
+                }
+            } while (true);
         }
-        else
-        {
-            switch (getCommand())
-            {
-                //Đọc phím A: dịch chuyển con trỏ trong bàn cờ sang trái 1 đơn vị.
-            case 'A':
-                PlaySound(TEXT("move.wav"), NULL, SND_FILENAME | SND_ASYNC);
-                moveLeft();
-                break;
+        //Đọc phím A: dịch chuyển con trỏ trong bàn cờ sang trái 1 đơn vị.
+                
+                if (input == 3)
+                {
+                    moveLeft();
+
+                }
                 //Đọc phím D: dịch chuyển con trỏ trong bàn cờ sang phải 1 đơn vị.
-            case 'D':
-                PlaySound(TEXT("move.wav"), NULL, SND_FILENAME | SND_ASYNC);
-                moveRight();
-                break;
+                if (input == 4)
+                {
+                    moveRight();
+
+                }
                 //Đọc phím W: dịch chuyển con trỏ trong bàn cờ đi lên 1 đơn vị.
-            case 'W':
-                PlaySound(TEXT("move.wav"), NULL, SND_FILENAME | SND_ASYNC);
-                moveUp();
-                break;
+                if (input == 2)
+                {
+                    moveUp();
+
+                }
                 //Đọc phím S: dịch chuyển con trỏ trong bàn cờ đi xuống 1 đơn vị.
-            case 'S':
-                PlaySound(TEXT("move.wav"), NULL, SND_FILENAME | SND_ASYNC);
-                moveDown();
-                break;
+                if (input == 5)
+                {
+                    moveDown();
+                }
                 //Đọc phím L: thực hiện lưu game hiện hành vào tập tin.
-            case 'L':
-                PlaySound(TEXT("move.wav"), NULL, SND_FILENAME | SND_ASYNC);
-                SaveGame(-4);
-                break;
+                
                 //Đọc phím T: thực hiện load game.
-            case 'T':
-                PlaySound(TEXT("move.wav"), NULL, SND_FILENAME | SND_ASYNC);
-                LoadLoad();
-                break;
+                if (input == 10)
+                {
+                    playSound(2);
+                    Load();
+                }
                 //Đọc phím Enter: thực hiện đánh quân X vào vị trí hiện tại của con trỏ trên bàn cờ.
-            case 13:
-                PlaySound(TEXT("move.wav"), NULL, SND_FILENAME | SND_ASYNC);
-                //Lấy ra giá trị (x,y) hiện tại của con trỏ trên bàn cờ.
-                int x = getXatEnter();
-                int y = getYatEnter();
-                //Hàm để đánh quân X ra màn hình vào trị trí hiện tại của con trỏ trên bàn cờ sau khi người chơi nahans phím Enter.
-                if (processCheckBoard())
+                if (input == 6)
                 {
-                    //Kiểm tra xem liệu người chơi hoặc máy có chiến thắng hay chưa?
-                    switch (processFinish(x, y))
-                    {
-                        //Trường hợp người chơi thắng:
-                    case -1:
-                        PlaySound(TEXT("move.wav"), NULL, SND_FILENAME | SND_ASYNC);
-                        //Nâng điểm số lên cho người chơi.
-                        a.score1++;
-                        while (k)
-                        {
-                            if (_kbhit())
-                            {
-                                //Hour xem người chơi liệu muốn chới tiếp hay thoát game?
-                                switch (_getch())
-                                {
-                                    //Đọc phím y: chơi tiếp.
-                                case 'y':
-                                    PlaySound(TEXT("move.wav"), NULL, SND_FILENAME | SND_ASYNC);
-                                    load = 0;
-                                    return PlayerVsCom(a, load, data);
-                                    break;
-                                    //Đọc phím ESC: thoát game.
-                                case 27:
-                                    PlaySound(TEXT("move.wav"), NULL, SND_FILENAME | SND_ASYNC);
-                                    system("cls");
-                                    menu();
-                                    break;
-                                }
-                            }
-                        }
-                        break;
-                        //Trường hợp máy thắng:
-                    case 1:
-                        PlaySound(TEXT("move.wav"), NULL, SND_FILENAME | SND_ASYNC);
-                        //Nâng điểm số lên cho máy.
-                        a.score2++;
-                        while (k)
-                        {
-                            if (_kbhit())
-                            {
-                                //Hour xem người chơi liệu muốn chới tiếp hay thoát game?
-                                switch (_getch())
-                                {
-                                    //Đọc phím y: chơi tiếp.
-                                case 'y':
-                                    PlaySound(TEXT("move.wav"), NULL, SND_FILENAME | SND_ASYNC);
-                                    load = 0;
-                                    return PlayerVsCom(a, load, data);
-                                    break;
-                                    //Đọc phím ESC: thoát game.
-                                case 27:
-                                    PlaySound(TEXT("move.wav"), NULL, SND_FILENAME | SND_ASYNC);
-                                    system("cls");
-                                    menu();
-                                    break;
-                                }
-                            }
-                        }
-                        break;
-                        //Trường hợp người chơi và máy hòa nhau.
-                    case 0:
-                        while (k)
-                        {
-                            if (_kbhit())
-                            {
-                                //Hỏi xem người chơi liệu muốn chơi tiếp hay thoát game.
-                                switch (_getch())
-                                {
-                                    //Đọc phím y: chơi tiếp.
-                                case 'y':
-                                    PlaySound(TEXT("move.wav"), NULL, SND_FILENAME | SND_ASYNC);
-                                    load = 0;
-                                    return PlayerVsCom(a, load, data);
-                                    break;
-                                    //Đọc phím ESC: thoát game.
-                                case 27:
-                                    PlaySound(TEXT("move.wav"), NULL, SND_FILENAME | SND_ASYNC);
-                                    system("cls");
-                                    menu();
-                                    break;
-                                }
-                            }
-                        }
-                        break;
-                    }
-                }
-            }
-        }
+                    playSound(2);
+                    enterCom(a, load, data);
+                }      
     }
 }
-
-int PlayerVsPlayer(Diem& a, int load, char data[30])
-{
-    int k = 1;
-    int n = 99;
-    HienTroChuot();
-    setGame(SIZE, 0, 0);
-    setCountXY(g);
-    if (load == -30)
-    {
-        setTurn();
-        LoadGame(data);
-    }
-    else if (load == -31)
-    {
-        LoadGame(data);
-    }
-    else
-        startGame();
-    PrintScoreBoard();
-    Textcolor(244);
-    gotoXY(SIZE * 4 + 32, 32);
-    cout << " PLAYER VS PLAYER ";
-    Textcolor(Blue);
-    gotoXY(SIZE * 4 + 30 + 19, 6);
-    //In điểm số 1.
-    cout << a.score1;
-    Textcolor(Red);
-    gotoXY(SIZE * 4 + 30 + 19, 19);
-    //In điểm số 2
-    cout << a.score2;
-    gotoXY(2, 1);
-    while (isContinue())
-    {
-        waitKeyBoard();
-        if (getCommand() == 27)
-        {
-            PlaySound(TEXT("move.wav"), NULL, SND_FILENAME | SND_ASYNC);
-            return 27;
-        }
-
-        else
-        {
-            switch (getCommand())
-            {
-            case 'A':
-                PlaySound(TEXT("move.wav"), NULL, SND_FILENAME | SND_ASYNC);
-                moveLeft();
-                break;
-            case 'D':
-                PlaySound(TEXT("move.wav"), NULL, SND_FILENAME | SND_ASYNC);
-                moveRight();
-                break;
-            case 'W':
-                PlaySound(TEXT("move.wav"), NULL, SND_FILENAME | SND_ASYNC);
-                moveUp();
-                break;
-            case 'S':
-                PlaySound(TEXT("move.wav"), NULL, SND_FILENAME | SND_ASYNC);
-                moveDown();
-                break;
-            case 'G':
-                PlaySound(TEXT("move.wav"), NULL, SND_FILENAME | SND_ASYNC);
-                if (getTurn() == 1)
-                    SaveGame(-31);
-                else
-                    SaveGame(-30);
-                break;
-            case 'L':
-                PlaySound(TEXT("move.wav"), NULL, SND_FILENAME | SND_ASYNC);
-                LoadLoad();
-                break;
-            case 13:
-                PlaySound(TEXT("move.wav"), NULL, SND_FILENAME | SND_ASYNC);
-                int x = getXatEnter();
-                int y = getYatEnter();
-                if (processCheckBoard())
-                {
-                    switch (processFinish(x, y))
-                    {
-                    case -1:
-                        a.score1++;
-                        while (k)
-                        {
-                            if (_kbhit())
-                            {
-                                switch (_getch())
-                                {
-                                case 'y':
-                                    PlaySound(TEXT("move.wav"), NULL, SND_FILENAME | SND_ASYNC);
-                                    load = 0;
-                                    return PlayerVsPlayer(a, load, data);
-                                    break;
-                                case 27:
-                                    PlaySound(TEXT("move.wav"), NULL, SND_FILENAME | SND_ASYNC);
-                                    system("cls");
-                                    menu();
-                                    break;
-                                }
-                            }
-                        }
-                        break;
-                    case 1:
-                        PlaySound(TEXT("move.wav"), NULL, SND_FILENAME | SND_ASYNC);
-                        a.score2++;
-                        while (k)
-                        {
-                            if (_kbhit())
-                            {
-                                switch (_getch())
-                                {
-                                case 'y':
-                                    PlaySound(TEXT("move.wav"), NULL, SND_FILENAME | SND_ASYNC);
-                                    load = 0;
-                                    return PlayerVsPlayer(a, load, data);
-                                    break;
-                                case 27:
-                                    PlaySound(TEXT("move.wav"), NULL, SND_FILENAME | SND_ASYNC);
-                                    system("cls");
-                                    menu();
-                                    break;
-                                }
-                            }
-                        }
-                        break;
-                    case 0:
-                        PlaySound(TEXT("move.wav"), NULL, SND_FILENAME | SND_ASYNC);
-                        while (k)
-                        {
-                            if (_kbhit())
-                            {
-                                switch (_getch())
-                                {
-                                case 'y':
-                                    PlaySound(TEXT("move.wav"), NULL, SND_FILENAME | SND_ASYNC);
-                                    load = 0;
-                                    return PlayerVsPlayer(a, load, data);
-                                    break;
-                                case 27:
-                                    PlaySound(TEXT("move.wav"), NULL, SND_FILENAME | SND_ASYNC);
-                                    system("cls");
-                                    menu();
-                                    break;
-                                }
-                            }
-                        }
-                        break;
-                    }
-                }
-            }
-        }
-    }
-}
-
-
 void setGame(int pSize, int pLeft, int  pTop)
 {
     _b = new _Board;
@@ -1627,7 +1603,6 @@ void setGame(int pSize, int pLeft, int  pTop)
     cout << 2.5;
     g->_turn = 1;
     cout << 3;
-    g->_command = -1;
     cout << 4;
     g->_x = pLeft;
     cout << 5;
@@ -1636,26 +1611,19 @@ void setGame(int pSize, int pLeft, int  pTop)
 }
 
 //Hàm bắt phím vừa được nhập từ bàn phím.
-int getCommand() { return g->_command; }
 //Hmaf trả về kết quả liệu người chơi có muốn chơi tiếp hay thoát game? (Nếu _loop=1 -> Chơi tiếp, _loop=0 -> Thoát game).
 bool isContinue() { return g->_loop; }
 //Hàm để chờ người chơi nhập phím bất kì từ Keyboard.
-char waitKeyBoard()
-{
-    g->_command = toupper(_getch());
-    return g->_command;
-}
 //Hàm đặt vị trí hiện thông báo liệu người chơi liệu muốn chơi tiếp hay thoát game?
 char askContinue()
 {
     gotoXY(0, getYAt(getSize(_b) - 1, getSize(_b) - 1) + 4);
-    return waitKeyBoard();
+    return _getch();
 }
 //Hàm để bắt đầu 1 game mới.
 void startGame()
 {
-    setCountXY(_b);
-    system("cls");
+    clearConsole();
     //Reset lại toàn bộ dữ liệu (Tất cả các ô trên bàn cờ đều là ô trống -> check=0).
     resetData();
     //Vẽ bàn cờ.
@@ -1721,7 +1689,7 @@ void moveUp() {
         gotoXY(g->_x, g->_y);
     }
 }
-//Hàm để đánh quân X hoặc O vào vị trí hiện tại của con trỏ trên bàn cờ.
+//Hàm để đánh quân X hoặc O vào vị trí hiện tại củ+ ba con trỏ trên bàn cờ.
 bool processCheckBoard()
 {
     //Check xem ô đang chứa con trỏ được chọn trong bàn cờ chứa giá trị X hay O?
@@ -1781,17 +1749,20 @@ int processFinish(int x, int y)
     {
         //Trường hợp người chơi X thắng, hiện ra màn hình P1 chiến thắng và lưu kết quả vào lịch sử.
     case -1:
-        Draw(1, x, y);
+        Draw(1, 10, 10);
+        Box();
         LichSuGame(1);
         break;
         //Trường hợp người chơi O thắng, hiện ra màn hình P2 chiến thắng và lưu kết quả vào lịch sử.
     case 1:
-        Draw(2, x, y);
+        Draw(2, 10, 10);
+        Box();
         LichSuGame(2);
         break;
         //Trường hợp 2 người chơi hòa nhau, hiện ra màn hình 2 người chơi hòa nhau và lưu kết quả vào lịch sử.
     case 0:
-        Draw(3, x, y);
+        Draw(3, 10, 10);
+        Box();
         LichSuGame(0);
         break;
         //Trường hợp chưa có 2 chiến thắng, đổi lượt để người chơi tiếp theo đánh.
@@ -1827,11 +1798,21 @@ void LichSuGame(int n)
     ofstream f2;
     gotoXY(35, SIZE * 2 + 1);
 
-    if (n == 1) data = "P1 WIN";
-    if (n == 2) data = "P2 WIN";
-    if (n == 0) data = "DRAW";
+    if (n == 1) data = "P1 WIN ";
+    if (n == 2) data = "P2 WIN ";
+    if (n == 0) data = "DRAW ";
     f1.open(data, ios::out);
     f2.open("Lich Su.txt", ios::app);
+
+    char buffer[80];
+    time_t now = time(NULL);
+    ctime_s(buffer, sizeof(buffer), &now);
+
+    std::string time = "";
+    for (int i = 0; i < strlen(buffer); i++) {
+        time += buffer[i];
+    }
+    data += time;
     f2 << data << " " << endl;
     //thong tin
     f1 << a.score1 << " " << a.score2 << " " << n << endl;
@@ -1845,35 +1826,38 @@ void LichSuGame(int n)
     }
     f1.close();
     f2.close();
-    gotoXY(35, SIZE * 2 + 2);
-    cout << "ESC : BACK";
-    int t = 1;
-    while (t)
-    {
-        if (_kbhit())
-        {
-            switch (_getch())
-            {
-            case 27:
-                t = 0;
-                system("cls");
-                menu();
-                break;
+}
+
+//Hàm Save game để có thể tiếp tục chơi tiếp mỗi khi thoát game.
+void SaveGame(int n) {
+    Diem a = { 0 };
+    // kiem tra co trung khong
+    fstream f2("Name.txt", ios::in);
+    bool flag = false;
+    char data[30];
+    do {
+        gotoXY(35, SIZE * 2 + 1);
+        cout << "ENTER FILE NAME: ";
+        Textcolor(244);
+        cin.getline(data, 30);
+        char line[30];
+        //f2.clear(); // clear the failbit after getline() fails
+        f2.seekg(0, ios::beg); // reset the file pointer to the beginning
+        flag = false; // reset the flag for each loop iteration
+        while (f2.getline(line, 30)) {
+            if (strcmp(data, line) == 0) {
+                flag = true;
+                gotoXY(85, 47);  cout << "ERROR: File name already exists. Please choose another name.";
+                break; // exit the loop early if a match is found
             }
         }
-    }
-}
-//Hàm Save game để có thể tiếp tục chơi tiếp mỗi khi thoát game.
-void SaveGame(int n)
-{
-    Diem a = { 0 };
-    char data[30];
+    } while (flag);
+
+    f2.close();
+    //
+
+
     ofstream f1;
-    ofstream f2;
-    gotoXY(35, SIZE * 2 + 1);
-    cout << "ENTER FILE NAME: ";
-    Textcolor(244);
-    cin.getline(data, 30);
     f1.open(data, ios::out);
     f2.open("Name.txt", ios::app);
     f2 << data << " " << endl;
@@ -1889,6 +1873,7 @@ void SaveGame(int n)
     }
     f1.close();
     f2.close();
+
     gotoXY(35, SIZE * 2 + 2);
     cout << "ESC : BACK";
     int t = 1;
@@ -1899,14 +1884,15 @@ void SaveGame(int n)
             switch (_getch())
             {
             case 27:
-                PlaySound(TEXT("move.wav"), NULL, SND_FILENAME | SND_ASYNC);
+                playSound(2);
                 t = 0;
-                system("cls");
+                clearConsole();
                 menu();
                 break;
             }
         }
     }
+
 }
 //Hàm Load dữ liệu game từ tập tin mỗi khi người chơi muốn chơi tiếp sau khi thoát game để có thể tiếp tục chơi ở dữ liệu cũ.
 void LoadGame(char data[30])
@@ -1922,7 +1908,7 @@ void LoadGame(char data[30])
     else
     {
         f >> a.score1 >> a.score2 >> g->chedo;
-        system("cls");
+        clearConsole();
         //thong tin
         //ban co
         int k;
@@ -1939,11 +1925,10 @@ void LoadGame(char data[30])
         drawBoard();
         f.close();
     }
-    Textcolor(Blue);
-    gotoXY(SIZE * 4 + 30 + 12, 4);
+    gotoXY((SIZE * 4) + 30 + 12, 5);
     cout << _b->CountX;
     Textcolor(Red);
-    gotoXY(SIZE * 4 + 30 + 12, 14);
+    gotoXY(SIZE * 4 + 30 + 12, 18);
     cout << _b->CountY;
     if (g->_turn == 1)
     {
@@ -1957,4 +1942,14 @@ void LoadGame(char data[30])
         gotoXY(SIZE * 4 + 32, 26);
         cout << " Den luot PLAYER 2 ";
     }
+}
+
+void Box()
+{
+    int i = 8, j = 8;
+    Textcolor(Blue);
+    gotoXY(50, j + 18);
+    cout << "Y   : Play Again";
+    gotoXY(50, j + 19);
+    cout << "ESC : BACK";
 }
