@@ -1,9 +1,6 @@
 #include "Menu.h"
 #include "Board.h"
 #include "Game.h"
-#include <thread>
-#include <chrono>
-#include <future>
 #ifndef _CRT_SECURE_NO_WARNINGS
 #define _CRT_SECURE_NO_WARNINGS
 #endif
