@@ -30,7 +30,6 @@
 using namespace std;
 using std::cout;
 #pragma comment(lib, "winmm.lib")
-
 // Dinh nghia ten ham 
 static string menuItems[] = { "Player Vs Player", "Player Vs Computer", "Load Game", "History", "Instruction", "About", "Exit" };
 static int numItems = sizeof(menuItems) / sizeof(menuItems[0]);
@@ -38,22 +37,22 @@ static int currentSelection = 0;
 
 //Dinh nghia file ve
 static string file_name[] = { "Caro.txt", "P1.txt", "P2.txt", "Draw.txt", "About.txt" };
-
-void HienTroChuot();
-void AnTroChuot();
+extern bool isSoundOn;
+void showCur();
+void hideCur();
 void SetConsole(int width, int height);
 void Textcolor(int color);
 void gotoXY(int x, int y);
-int playSound(int i, char c = 'o');
+void playSound(int);
 int getConsoleInput();
 void menu();
-void Draw(int i, int x, int y);  // ve file ten gi va vi tri x y de in
-void About();
-void ClearConsole();
+void clearConsole();
 void setConsoleTitle();
 
-int ReadChedo(char a[30]); //Tìm kiếm file người dùng (hỗ trợ hàm LoadLoad)
-void ReadNameFile(); //Hiển thị các người dùng đã lưu
-void LoadLoad(); // Mở file người chơi đã lưu
-void Instruction(); //Mục Giới thiệu
-void History(); //Mục history#pragma once
+int readMode(char a[30]); //Tìm kiếm file người dùng (hỗ trợ hàm LoadLoad)
+void readNameFile(); //Hiển thị các người dùng đã lưu
+void Load(); // Mở file người chơi đã lưu
+void instruction(); //Mục hướng dẫn
+void history(); //Mục history#pragma once
+void About();  // thông tin
+
