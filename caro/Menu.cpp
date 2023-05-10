@@ -1,6 +1,16 @@
 #include "Menu.h"
 #include "Board.h"
 #include "Game.h"
+#include <thread>
+#include <chrono>
+#include <future>
+#ifndef _CRT_SECURE_NO_WARNINGS
+#define _CRT_SECURE_NO_WARNINGS
+#endif
+
+#ifndef _SILENCE_ALL_CXX17_DEPRECATION_WARNINGS
+#define _SILENCE_ALL_CXX17_DEPRECATION_WARNINGS
+#endif
 bool isSoundOn = true;
 void showCur()
 {
@@ -285,6 +295,9 @@ void readNameFile()
     f.close();
 
 }
+void exitFunction() {
+    
+}
 void Load()
 {
     int n = 100;
@@ -365,8 +378,6 @@ void menu()
     int y = 19;
     // Initial menu setup
     Draw(0, 10, 1); 
-    size_t size = menuItems[0].size();
-    Textcolor(Red); gotoXY(x, y); cout << menuItems[0];
     
     for (int i = 0; i < numItems; i++)
     {
@@ -382,11 +393,16 @@ void menu()
     cout << "Enter : Select ";
     gotoXY(x , y + numItems + 9);
     cout << "M: mute";
-    gotoXY(x + size, y);
+   
     char ch = ' '; // Initialize character input variable
     // Main loop to handle user input and menu selection
     while (ch != 'x') // Loop until user inputs 'x' to exit
     {
+        // Highlight new selection
+        Textcolor(Red);
+        gotoXY(x, y + currentSelection);
+        cout << menuItems[currentSelection];
+        Textcolor(15);
         int input = 0;
         input = getConsoleInput(); // Get keyboard input
         // Clear current selection
@@ -480,10 +496,6 @@ void menu()
             }
             }
         }
-        // Highlight new selection
-        Textcolor(Red);
-        gotoXY(x, y + currentSelection);
-        cout << menuItems[currentSelection];
-        Textcolor(15);
+        
     }
 }
