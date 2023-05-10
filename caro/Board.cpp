@@ -246,9 +246,9 @@ void LoadingGame()
     hideCur();
     fstream file;
     string line;
-    for (int l = 0; l < 10; l++)
-    {
-        
+    playSound(6);
+    for (int l = 0; l < 8; l++)
+    { 
         int x = 30, y = 10;
         file.open("Loading.txt", ios::in);
         while (!file.eof()) {
@@ -309,6 +309,62 @@ void LoadingGame()
         }
         file.close();
     }
-    
     clearConsole();
+}
+void windraw(int i,int x,int y)
+{
+    hideCur();
+    fstream file;
+    string line;
+    if (i == 1 || i == 2)
+    {
+        playSound(4);
+    }
+    else
+        playSound(5);
+    for (int k = 0; k < 5; k++)
+    {
+        file.open(file_name[i], ios::in);
+        while (!file.eof()) {
+            getline(file, line);
+            gotoXY(x, y);
+            if (line == "load") {
+                y = 9;
+                Sleep(250);
+            }
+            else {
+                for (int j = 0; j < line.length(); j++)
+                {
+                    if (line[j] == '.')
+                    {
+                        Textcolor(15);
+                        cout << char(219);
+                    }
+                    else if (line[j] == '1')
+                    {
+                        Textcolor(rand() % 15);
+                        cout << line[j];
+                    }
+                    
+                    else if (line[j] == '/')
+                    {
+                        Textcolor(Red);
+                        cout << char(003);
+                    }
+                    else if (line[j] == ',')
+                    {
+                        Textcolor(Blue);
+                        cout << char(004);
+                    }
+                    else if (line[j] == '-')
+                    {
+                        Textcolor(Green);
+                        cout << char(005);
+                    }
+                }
+            }
+            y += 1;
+        }
+        file.close();
+    }
 }
