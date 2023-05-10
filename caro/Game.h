@@ -114,9 +114,13 @@ static _Point** _pArr;
 		// -5  : Chế độ P vs Bot (Khó) đang đến lượt X
 		int CountX;
 		int CountY;
+
+		bool _changeTurn;
+		bool _showCursor;
 	};
 	static _Game* g;
-
+	void showCursor(bool show);
+	
 
 	// Cài đặt biến đếm nước cờ X và Y = 0.
 	//int getChedo() { return g->chedo; }
@@ -191,3 +195,5 @@ void PvCaskForRestart(Diem& a, int& load, char data[30]);
 static int input = -1;
 
 void clearConsoleLine(int y);
+void printTurnSymbol();
+int getCheckAtXY(int pX, int pY);
