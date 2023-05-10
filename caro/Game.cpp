@@ -51,7 +51,7 @@ void setPoint(int x, int y, int i, int j)
 
 vector<_Point> win;
 template <class T>
-int getSize(T *_b) { return _b->_size; }
+int getSize(T* _b) { return _b->_size; }
 template <class T>
 int getLeft(T* _b) { return _b->_left; }
 template <class T>
@@ -62,7 +62,7 @@ int getXAt(int i, int j)
 }
 int getYAt(int i, int j)
 {
-    return getY(i,j);
+    return getY(i, j);
 }
 void deleteBoard()
 {
@@ -76,14 +76,13 @@ void setBoard(int pSize, int pX, int pY)
 {
     _b->_size = pSize;
     _b->_left = pX;
-    _b->_top = pY;  
+    _b->_top = pY;
     _pArr = new _Point * [pSize];
     for (int i = 0; i < pSize; i++)
     {
         _pArr[i] = new _Point[pSize];
     }
 }
-
 // sửa tới đây 11:00 06/05/2023
 // chưa sửa cần mới xóa các đối tượng thôi 
 void loadData(int i, int j, int k)
@@ -93,9 +92,9 @@ void loadData(int i, int j, int k)
     //Gán tọa độ x trong bàn cờ thành giá trị của [i] trong mảng 2 chiều.
     setX(4 * j + _b->_left + 2, i, j);
     //Gán tọa độ y trong bàn cờ thành giá trị của [j] trong mảng 2 chiều.
-    setY(2 * i + _b->_top + 1, i,j);
+    setY(2 * i + _b->_top + 1, i, j);
     //Gán trạng thái của ô trong bàn cờ (X, O, ô trống) vào các phần tử trong mảng.
-    setCheck(k,i,j);
+    setCheck(k, i, j);
     //Nếu trạng thái ô là quân X, ghi quân X ra màn hình, đếm số quân X tăng lên 1.
     if (k == -1)
     {
@@ -122,10 +121,10 @@ void resetData()
     {
         for (int j = 0; j < _b->_size; j++)
         {
-            setX(4 * j + _b->_left + 2, i,j);
-            setY(2 * i + _b->_top + 1,i,j);
+            setX(4 * j + _b->_left + 2, i, j);
+            setY(2 * i + _b->_top + 1, i, j);
             //Gán tất cả các ô trong bàn cờ ở trạng thái ô trống -> Reset lại bàn cờ.
-            setCheck(0,i,j);
+            setCheck(0, i, j);
         }
     }
 }
@@ -136,22 +135,22 @@ int checkBoard(int pX, int pY, bool pTurn) // chế độ chơi 0: Player - 1: B
     {
         for (int j = 0; j < _b->_size; j++)
         {
-            if (getX(i,j) == pX && getY(i,j) == pY && getCheck(i,j) == 0)
+            if (getX(i, j) == pX && getY(i, j) == pY && getCheck(i, j) == 0)
             {
                 //Nếu là chế độ PVP -> Người chơi X đánh trước.
                 if (pTurn)
                 {
-                    setCheck(-1,i,j);
+                    setCheck(-1, i, j);
                     _b->CountX++;
                 }
                 //Nếu la chế độ PVE (Bot) -> Máy (O) đánh trước.
                 else
                 {
-                    setCheck(1,i,j);
+                    setCheck(1, i, j);
                     _b->CountY++;
                 }
                 //Trả về kết quả xem ai đánh trước (X hay O)
-                return getCheck(i,j);
+                return getCheck(i, j);
             }
         }
     }
@@ -245,7 +244,7 @@ int checkWinCol(int x, int y, int value) // Xet chien thang theo hang doc
     cottren = cotduoi = cot;
     // Xet chien thang
     // Xet hang doc
-    while (getCheck(cottren,dong) == value)
+    while (getCheck(cottren, dong) == value)
     {
         countColTop++;
         win.push_back(_pArr[cottren][dong]);
@@ -918,6 +917,7 @@ long SoDiemPhongThu_DuyetDoc(long Dong, long Cot, const long Defend_Score[], con
         iScoreTempDoc *= 2;
     return iScoreTempDoc;
 }
+
 long SoDiemPhongThu_DuyetNgang(long Dong, long Cot, const long Defend_Score[], const long Attack_Score[])
 {
     long iScoreTempNgang = 0;
@@ -930,7 +930,7 @@ long SoDiemPhongThu_DuyetNgang(long Dong, long Cot, const long Defend_Score[], c
     for (int iDem = 1; iDem < 6 && Cot + iDem < _b->_size; iDem++)
     {
         //Nếu phía trên ô đang xét là quân ta, iSoQuanTa++; (số quân ta) và thoát khỏi vòng lặp (Trường hợp 1).
-        if (getCheck(Dong , Cot + iDem) == 1)
+        if (getCheck(Dong, Cot + iDem) == 1)
         {
             iSoQuanTa++;
             break;
@@ -1103,6 +1103,7 @@ long SoDiemPhongThu_DuyetCheo1(long Dong, long Cot, const long Defend_Score[], c
         iScoreTempCheoNguoc *= 2;
     return iScoreTempCheoNguoc;
 }
+
 long SoDiemPhongThu_DuyetCheo2(long Dong, long Cot, const long Defend_Score[], const long Attack_Score[])
 {
     long iScoreTempCheoXuoi = 0;
@@ -1178,7 +1179,6 @@ long SoDiemPhongThu_DuyetCheo2(long Dong, long Cot, const long Defend_Score[], c
         iScoreTempCheoXuoi *= 2;
     return iScoreTempCheoXuoi;
 }
-
 _Point Tim_Kiem_NuocDi_1()
 {
     //Đây là điểm tại ô mà ta đang xét trên bàn cờ.
@@ -1195,7 +1195,7 @@ _Point Tim_Kiem_NuocDi_1()
             long DiemTanCong = 0;
             long DiemPhongThu = 0;
             //Vì ta chỉ có thể tấn công hay phòng thủ ở những ô đang trống, lọc lấy những ô trống bằng dòng code _pArr[i][j].getCheck() == 0;
-            if (getCheck(i,j) == 0)
+            if (getCheck(i, j) == 0)
             {
                 //Tính số điểm tấn công của ô trống bằng tổng tất cả số điểm tấn công của ô theo hàng, theo cột, theo đường chéo 1 và theo đường chéo 2.
                 //Số điểm tấn công của ô theo cột.
@@ -1303,104 +1303,104 @@ int PlayerVsPlayer(Diem& a, int load, char data[30])
     gotoXY(2, 1);
     while (isContinue())
     {
-            auto input = getConsoleInput();
-                    //Đọc phím A: dịch chuyển con trỏ trong bàn cờ sang trái 1 đơn vị.
-             if (input == 3)
-                {
-                    moveLeft();
-                }
-                    //Đọc phím D: dịch chuyển con trỏ trong bàn cờ sang phải 1 đơn vị.
-             if (input == 4)
-                {
-                    moveRight();
-                }
-                    //Đọc phím W: dịch chuyển con trỏ trong bàn cờ đi lên 1 đơn vị.
-             if (input == 2)
-                {
-                    moveUp();
-                }
-                    //Đọc phím S: dịch chuyển con trỏ trong bàn cờ đi xuống 1 đơn vị.
-             if (input == 5)
-                {
-                    moveDown();
-                }
-                    //Đọc phím L: thực hiện lưu game hiện hành vào tập tin.
-             if (input == 7)
-                {
-                 playSound(2);
-                    if (getTurn() == 1)
-                        SaveGame(-31);
-                    else
-                        SaveGame(-30);
+        auto input = getConsoleInput();
+        //Đọc phím A: dịch chuyển con trỏ trong bàn cờ sang trái 1 đơn vị.
+        if (input == 3)
+        {
+            moveLeft();
+        }
+        //Đọc phím D: dịch chuyển con trỏ trong bàn cờ sang phải 1 đơn vị.
+        if (input == 4)
+        {
+            moveRight();
+        }
+        //Đọc phím W: dịch chuyển con trỏ trong bàn cờ đi lên 1 đơn vị.
+        if (input == 2)
+        {
+            moveUp();
+        }
+        //Đọc phím S: dịch chuyển con trỏ trong bàn cờ đi xuống 1 đơn vị.
+        if (input == 5)
+        {
+            moveDown();
+        }
+        //Đọc phím L: thực hiện lưu game hiện hành vào tập tin.
+        if (input == 7)
+        {
+            playSound(2);
+            if (getTurn() == 1)
+                SaveGame(-31);
+            else
+                SaveGame(-30);
 
-                }
-                    //Đọc phím T: thực hiện load game.
-             if (input == 10)
+        }
+        //Đọc phím T: thực hiện load game.
+        if (input == 10)
+        {
+            playSound(2);
+            Load();
+        }
+        //Đọc phím Enter: thực hiện đánh quân X vào vị trí hiện tại của con trỏ trên bàn cờ.
+        if (input == 6)
+        {
+            playSound(2);
+            int x = getXatEnter();
+            int y = getYatEnter();
+            if (processCheckBoard())
+            {
+                switch (processFinish(x, y))
                 {
-                 playSound(2);
-                    Load();
-                }
-                    //Đọc phím Enter: thực hiện đánh quân X vào vị trí hiện tại của con trỏ trên bàn cờ.
-             if (input == 6)
+                case -1:
                 {
-                 playSound(2);
-                    int x = getXatEnter();
-                    int y = getYatEnter();
-                    if (processCheckBoard())
-                    {
-                        switch (processFinish(x, y))
-                        {
-                        case -1:
-                        {
-                            playSound(4);
-                            a.score1++;
-                            PvPaskForRestart(a, load, data);
-                            break;
-                        }
-                        case 1:
-                        {
-                            playSound(4);
-                            a.score2++;
-                            PvPaskForRestart(a, load, data);
-                            break;
-                        }
-                        case 0:
-                        {
-                            playSound(4);
-                            PvPaskForRestart(a, load, data);
-                            break;
-                        }
-                        }
+                    playSound(4);
+                    a.score1++;
+                    PvPaskForRestart(a, load, data);
+                    break;
+                }
+                case 1:
+                {
+                    playSound(4);
+                    a.score2++;
+                    PvPaskForRestart(a, load, data);
+                    break;
+                }
+                case 0:
+                {
+                    playSound(4);
+                    PvPaskForRestart(a, load, data);
+                    break;
+                }
+                }
+            }
+
+        }
+        if (input == 1)
+        {
+            playSound(2);
+            gotoXY(50, 42); cout << "You should save game before you exit. Would you to exit game?";
+            gotoXY(65, 43); cout << "Y: Yes           N: No";
+            do {
+                int yn = getConsoleInput();
+                if (yn == 11 || yn == 9)
+                {
+                    if (yn == 9) {
+                        clearConsoleLine(42);
+                        clearConsoleLine(43);
+                        int x = getXatEnter();
+                        int y = getYatEnter();
+                        gotoXY(x, y);
+                        break;
                     }
-
+                    else {
+                        return 27;
+                    }
                 }
-             if (input == 1)
-             {
-                 playSound(2);
-                 gotoXY(50, 42); cout << "You should game before you exit. Would you to exit game?";
-                 gotoXY(50, 43); cout << "Y: Yes           N: No";
-                 do {
-                     int yn = getConsoleInput();
-                     if (yn == 11 || yn == 9)
-                     {
-                         if (yn == 9) {
-                             clearConsoleLine(42);
-                             clearConsoleLine(43);
-                             int x = getXatEnter();
-                             int y = getYatEnter();
-                             gotoXY(x, y);
-                             break;
-                         }
-                         else {
-                             return 27;
-                         }
-                     }
-                 } while (true);
-             }
+            } while (true);
+        }
     }
 }
 
-void PvPaskForRestart(Diem &a,int& load, char data[30])
+void PvPaskForRestart(Diem& a, int& load, char data[30])
 {
     int k = 1;
     while (k)
@@ -1412,7 +1412,7 @@ void PvPaskForRestart(Diem &a,int& load, char data[30])
             load = 0;
             PlayerVsPlayer(a, load, data);
         }
-        else if(input == 1)
+        else if (input == 1)
         {
             playSound(2);
             clearConsole();
@@ -1441,34 +1441,34 @@ void PvCaskForRestart(Diem& a, int& load, char data[30])
     }
 }
 void enterCom(Diem& a, int load, char data[30]) {
-        int x = getXatEnter();
-        int y = getYatEnter();
-        if (processCheckBoard())
+    int x = getXatEnter();
+    int y = getYatEnter();
+    if (processCheckBoard())
+    {
+        switch (processFinish(x, y))
         {
-            switch (processFinish(x, y))
-            {
-            case -1:
-            {
-                playSound(4);
-                a.score1++;
-                PvCaskForRestart(a, load, data);
-                break;
-            }
-            case 1:
-            {
-                playSound(4);
-                a.score2++;
-                PvCaskForRestart(a, load, data);
-                break;
-            }
-            case 0:
-            {
-                playSound(4);
-                PvCaskForRestart(a, load, data);
-                break;
-            }
-            }
+        case -1:
+        {
+            playSound(4);
+            a.score1++;
+            PvCaskForRestart(a, load, data);
+            break;
         }
+        case 1:
+        {
+            playSound(4);
+            a.score2++;
+            PvCaskForRestart(a, load, data);
+            break;
+        }
+        case 0:
+        {
+            playSound(4);
+            PvCaskForRestart(a, load, data);
+            break;
+        }
+        }
+    }
 }
 int PlayerVsCom(Diem& a, int load, char data[30])
 {
@@ -1515,9 +1515,9 @@ int PlayerVsCom(Diem& a, int load, char data[30])
                 enterCom(a, load, data);
             }
             //Đặt vị trí đánh đầu tiên cho máy.
-            else 
+            else
             {
-				TimKiemNuocDi();
+                TimKiemNuocDi();
                 int x = getXatEnter();
                 int y = getYatEnter();
                 gotoXY(x, y);
@@ -1526,9 +1526,9 @@ int PlayerVsCom(Diem& a, int load, char data[30])
         }
         int input = getConsoleInput();
         if (input == 7)
-                {
-                    SaveGame(-4);
-                }
+        {
+            SaveGame(-4);
+        }
         if (input == 1)
         {
             playSound(2);
@@ -1553,43 +1553,43 @@ int PlayerVsCom(Diem& a, int load, char data[30])
             } while (true);
         }
         //Đọc phím A: dịch chuyển con trỏ trong bàn cờ sang trái 1 đơn vị.
-                
-                if (input == 3)
-                {
-                    moveLeft();
 
-                }
-                //Đọc phím D: dịch chuyển con trỏ trong bàn cờ sang phải 1 đơn vị.
-                if (input == 4)
-                {
-                    moveRight();
+        if (input == 3)
+        {
+            moveLeft();
 
-                }
-                //Đọc phím W: dịch chuyển con trỏ trong bàn cờ đi lên 1 đơn vị.
-                if (input == 2)
-                {
-                    moveUp();
+        }
+        //Đọc phím D: dịch chuyển con trỏ trong bàn cờ sang phải 1 đơn vị.
+        if (input == 4)
+        {
+            moveRight();
 
-                }
-                //Đọc phím S: dịch chuyển con trỏ trong bàn cờ đi xuống 1 đơn vị.
-                if (input == 5)
-                {
-                    moveDown();
-                }
-                //Đọc phím L: thực hiện lưu game hiện hành vào tập tin.
-                
-                //Đọc phím T: thực hiện load game.
-                if (input == 10)
-                {
-                    playSound(2);
-                    Load();
-                }
-                //Đọc phím Enter: thực hiện đánh quân X vào vị trí hiện tại của con trỏ trên bàn cờ.
-                if (input == 6)
-                {
-                    playSound(2);
-                    enterCom(a, load, data);
-                }      
+        }
+        //Đọc phím W: dịch chuyển con trỏ trong bàn cờ đi lên 1 đơn vị.
+        if (input == 2)
+        {
+            moveUp();
+
+        }
+        //Đọc phím S: dịch chuyển con trỏ trong bàn cờ đi xuống 1 đơn vị.
+        if (input == 5)
+        {
+            moveDown();
+        }
+        //Đọc phím L: thực hiện lưu game hiện hành vào tập tin.
+
+        //Đọc phím T: thực hiện load game.
+        if (input == 10)
+        {
+            playSound(2);
+            Load();
+        }
+        //Đọc phím Enter: thực hiện đánh quân X vào vị trí hiện tại của con trỏ trên bàn cờ.
+        if (input == 6)
+        {
+            playSound(2);
+            enterCom(a, load, data);
+        }
     }
 }
 void setGame(int pSize, int pLeft, int  pTop)
@@ -1608,9 +1608,6 @@ void setGame(int pSize, int pLeft, int  pTop)
     cout << 5;
     g->_y = pTop;
     cout << 6;
-
-    g->_showCursor = false;
-    g->_changeTurn = true;
 }
 
 //Hàm bắt phím vừa được nhập từ bàn phím.
@@ -1647,12 +1644,12 @@ void startGame()
         gotoXY(SIZE * 4 + 32, 26);
         cout << " Den luot PLAYER 2 ";
     }
-   /* Textcolor(Blue);
-    gotoXY(SIZE * 4 + 30 + 11, 4);
-    cout << _b->CountX;
-    Textcolor(Red);
-    gotoXY(SIZE * 4 + 30 + 11, 14);
-    cout << _b->CountY;*/
+    /* Textcolor(Blue);
+     gotoXY(SIZE * 4 + 30 + 11, 4);
+     cout << _b->CountX;
+     Textcolor(Red);
+     gotoXY(SIZE * 4 + 30 + 11, 14);
+     cout << _b->CountY;*/
 }
 //Nếu người chơi chọn thoát game thì gán _loop=0 để thực hiện thoát game.
 void exitGame()
@@ -1664,56 +1661,32 @@ void moveRight()
 {
     if (g->_x < getXAt(getSize(_b) - 1, getSize(_b) - 1))
     {
-        if (getCheckAtXY(g->_x, g->_y) == 0)
-        {
-            gotoXY(g->_x, g->_y);
-            cout << ' ';
-        }
         g->_x += 4;
         gotoXY(g->_x, g->_y);
-        printTurnSymbol();
     }
 }
 //Hàm để di chuyển con trỏ trong bàn cờ sang trái 1 đơn vị.
 void moveLeft() {
     if (g->_x > getXAt(0, 0))
     {
-        if (getCheckAtXY(g->_x, g->_y) == 0)
-        {
-            gotoXY(g->_x, g->_y);
-            cout << ' ';
-        }
         g->_x -= 4;
         gotoXY(g->_x, g->_y);
-        printTurnSymbol();
     }
 }
 //Hàm để di chuyển con trỏ trong bàn cờ đi xuống 1 đơn vị.
 void moveDown() {
     if (g->_y < getYAt(getSize(_b) - 1, getSize(_b) - 1))
     {
-        if (getCheckAtXY(g->_x, g->_y) == 0)
-        {
-            gotoXY(g->_x, g->_y);
-            cout << ' ';
-        }
         g->_y += 2;
         gotoXY(g->_x, g->_y);
-        printTurnSymbol();
     }
 }
 //Hàm để di chuyển con trỏ trong bàn cờ đi lên 1 đơn vị.
 void moveUp() {
     if (g->_y > getYAt(0, 0))
     {
-        if (getCheckAtXY(g->_x, g->_y) == 0)
-        {
-            gotoXY(g->_x, g->_y);
-            cout << ' ';
-        }
         g->_y -= 2;
         gotoXY(g->_x, g->_y);
-        printTurnSymbol();
     }
 }
 //Hàm để đánh quân X hoặc O vào vị trí hiện tại củ+ ba con trỏ trên bàn cờ.
@@ -1776,19 +1749,19 @@ int processFinish(int x, int y)
     {
         //Trường hợp người chơi X thắng, hiện ra màn hình P1 chiến thắng và lưu kết quả vào lịch sử.
     case -1:
-        Draw(1, 10, 10);
+        windraw(1, 8, 10);
         Box();
         LichSuGame(1);
         break;
         //Trường hợp người chơi O thắng, hiện ra màn hình P2 chiến thắng và lưu kết quả vào lịch sử.
     case 1:
-        Draw(2, 10, 10);
+        windraw(2, 8, 10);
         Box();
         LichSuGame(2);
         break;
         //Trường hợp 2 người chơi hòa nhau, hiện ra màn hình 2 người chơi hòa nhau và lưu kết quả vào lịch sử.
     case 0:
-        Draw(3, 10, 10);
+        windraw(3, 8, 10);
         Box();
         LichSuGame(0);
         break;
@@ -1854,62 +1827,7 @@ void LichSuGame(int n)
     f1.close();
     f2.close();
 }
-void showCursor(bool show)
-{
-    CONSOLE_CURSOR_INFO info = { 1, show };
-    HANDLE consoleOutput = GetStdHandle(STD_OUTPUT_HANDLE);
-    SetConsoleCursorInfo(consoleOutput, &info);
-}
-int getCheckAtXY(int pX, int pY)
-{
-    for (int i = 0; i < _b->_size; i++)
-    {
-        for (int j = 0; j < _b->_size; j++)
-        {
-            if (getX(i, j) == pX && getY(i, j) == pY)
-            {
-                return getCheck(i, j);
-            }
-        }
-    }
-    throw runtime_error("Problem with cursor position");
-}
-void printTurnSymbol()
-{
-    if (getCheckAtXY(g->_x, g->_y) != 0)
-    {
-        if (g->_showCursor == false)
-        {
-            g->_showCursor = true;
-            showCursor(g->_showCursor);
-        }
-    }
-    else
-    {
-        if (g->_showCursor == true)
-        {
-            g->_showCursor = false;
-            showCursor(g->_showCursor);
-        }
-        if (g->_changeTurn == 1)
-        {
-            if (g->_turn == 1)
-            {
-                Textcolor(Blue);
-            }
-            else
-            {
-                Textcolor(Red);
-            }
-            g->_changeTurn = 0;
-        }
-        if(g->_turn == 1)
-            cout << 'x';
-        else
-            cout << 'o';
-        gotoXY(g->_x, g->_y);
-    }
-}
+
 //Hàm Save game để có thể tiếp tục chơi tiếp mỗi khi thoát game.
 void SaveGame(int n) {
     Diem a = { 0 };
@@ -1928,11 +1846,11 @@ void SaveGame(int n) {
             if (strcmp(data, line) == 0) {
                 flag = true;
                 clearConsoleLine(SIZE * 2 + 1);
-                gotoXY(35, SIZE * 2 + 2);
+                gotoXY(35, SIZE * 2 + 3);
                 cout << "ERROR: File name already exists. Please choose another name.\n";
                 break;
             }
-            else   clearConsoleLine(SIZE * 2 + 2);
+            else   clearConsoleLine(SIZE * 2 + 3);
         }
     } while (flag == true);
     f2.close();
@@ -1942,7 +1860,7 @@ void SaveGame(int n) {
 
     ofstream f1;
     f1.open(data, ios::out);
-    f1 << a.score1 << " " << a.score2 <<" "<< n << endl;
+    f1 << a.score1 << " " << a.score2 << " " << n << endl;
     f1.close();
 
 
@@ -2020,8 +1938,8 @@ void Box()
 {
     int i = 8, j = 8;
     Textcolor(Blue);
-    gotoXY(50, j + 18);
+    gotoXY(30, j + 18);
     cout << "Y   : Play Again";
-    gotoXY(50, j + 19);
+    gotoXY(30, j + 19);
     cout << "ESC : BACK";
 }
