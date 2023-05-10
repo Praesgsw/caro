@@ -83,6 +83,7 @@ void setBoard(int pSize, int pX, int pY)
         _pArr[i] = new _Point[pSize];
     }
 }
+
 // sửa tới đây 11:00 06/05/2023
 // chưa sửa cần mới xóa các đối tượng thôi 
 void loadData(int i, int j, int k)
@@ -917,7 +918,6 @@ long SoDiemPhongThu_DuyetDoc(long Dong, long Cot, const long Defend_Score[], con
         iScoreTempDoc *= 2;
     return iScoreTempDoc;
 }
-
 long SoDiemPhongThu_DuyetNgang(long Dong, long Cot, const long Defend_Score[], const long Attack_Score[])
 {
     long iScoreTempNgang = 0;
@@ -1103,7 +1103,6 @@ long SoDiemPhongThu_DuyetCheo1(long Dong, long Cot, const long Defend_Score[], c
         iScoreTempCheoNguoc *= 2;
     return iScoreTempCheoNguoc;
 }
-
 long SoDiemPhongThu_DuyetCheo2(long Dong, long Cot, const long Defend_Score[], const long Attack_Score[])
 {
     long iScoreTempCheoXuoi = 0;
@@ -1179,6 +1178,7 @@ long SoDiemPhongThu_DuyetCheo2(long Dong, long Cot, const long Defend_Score[], c
         iScoreTempCheoXuoi *= 2;
     return iScoreTempCheoXuoi;
 }
+
 _Point Tim_Kiem_NuocDi_1()
 {
     //Đây là điểm tại ô mà ta đang xét trên bàn cờ.
@@ -1608,6 +1608,9 @@ void setGame(int pSize, int pLeft, int  pTop)
     cout << 5;
     g->_y = pTop;
     cout << 6;
+
+    g->_showCursor = false;
+    g->_changeTurn = true;
 }
 
 //Hàm bắt phím vừa được nhập từ bàn phím.
@@ -1661,32 +1664,56 @@ void moveRight()
 {
     if (g->_x < getXAt(getSize(_b) - 1, getSize(_b) - 1))
     {
+        if (getCheckAtXY(g->_x, g->_y) == 0)
+        {
+            gotoXY(g->_x, g->_y);
+            cout << ' ';
+        }
         g->_x += 4;
         gotoXY(g->_x, g->_y);
+        printTurnSymbol();
     }
 }
 //Hàm để di chuyển con trỏ trong bàn cờ sang trái 1 đơn vị.
 void moveLeft() {
     if (g->_x > getXAt(0, 0))
     {
+        if (getCheckAtXY(g->_x, g->_y) == 0)
+        {
+            gotoXY(g->_x, g->_y);
+            cout << ' ';
+        }
         g->_x -= 4;
         gotoXY(g->_x, g->_y);
+        printTurnSymbol();
     }
 }
 //Hàm để di chuyển con trỏ trong bàn cờ đi xuống 1 đơn vị.
 void moveDown() {
     if (g->_y < getYAt(getSize(_b) - 1, getSize(_b) - 1))
     {
+        if (getCheckAtXY(g->_x, g->_y) == 0)
+        {
+            gotoXY(g->_x, g->_y);
+            cout << ' ';
+        }
         g->_y += 2;
         gotoXY(g->_x, g->_y);
+        printTurnSymbol();
     }
 }
 //Hàm để di chuyển con trỏ trong bàn cờ đi lên 1 đơn vị.
 void moveUp() {
     if (g->_y > getYAt(0, 0))
     {
+        if (getCheckAtXY(g->_x, g->_y) == 0)
+        {
+            gotoXY(g->_x, g->_y);
+            cout << ' ';
+        }
         g->_y -= 2;
         gotoXY(g->_x, g->_y);
+        printTurnSymbol();
     }
 }
 //Hàm để đánh quân X hoặc O vào vị trí hiện tại củ+ ba con trỏ trên bàn cờ.
@@ -1827,7 +1854,62 @@ void LichSuGame(int n)
     f1.close();
     f2.close();
 }
-
+void showCursor(bool show)
+{
+    CONSOLE_CURSOR_INFO info = { 1, show };
+    HANDLE consoleOutput = GetStdHandle(STD_OUTPUT_HANDLE);
+    SetConsoleCursorInfo(consoleOutput, &info);
+}
+int getCheckAtXY(int pX, int pY)
+{
+    for (int i = 0; i < _b->_size; i++)
+    {
+        for (int j = 0; j < _b->_size; j++)
+        {
+            if (getX(i, j) == pX && getY(i, j) == pY)
+            {
+                return getCheck(i, j);
+            }
+        }
+    }
+    throw runtime_error("Problem with cursor position");
+}
+void printTurnSymbol()
+{
+    if (getCheckAtXY(g->_x, g->_y) != 0)
+    {
+        if (g->_showCursor == false)
+        {
+            g->_showCursor = true;
+            showCursor(g->_showCursor);
+        }
+    }
+    else
+    {
+        if (g->_showCursor == true)
+        {
+            g->_showCursor = false;
+            showCursor(g->_showCursor);
+        }
+        if (g->_changeTurn == 1)
+        {
+            if (g->_turn == 1)
+            {
+                Textcolor(Blue);
+            }
+            else
+            {
+                Textcolor(Red);
+            }
+            g->_changeTurn = 0;
+        }
+        if(g->_turn == 1)
+            cout << 'x';
+        else
+            cout << 'o';
+        gotoXY(g->_x, g->_y);
+    }
+}
 //Hàm Save game để có thể tiếp tục chơi tiếp mỗi khi thoát game.
 void SaveGame(int n) {
     Diem a = { 0 };
