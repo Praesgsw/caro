@@ -1831,48 +1831,38 @@ void LichSuGame(int n)
 //Hàm Save game để có thể tiếp tục chơi tiếp mỗi khi thoát game.
 void SaveGame(int n) {
     Diem a = { 0 };
-    // kiem tra co trung khong
     fstream f2("Name.txt", ios::in);
     bool flag = false;
     char data[30];
     do {
         gotoXY(35, SIZE * 2 + 1);
         cout << "ENTER FILE NAME: ";
-        Textcolor(244);
         cin.getline(data, 30);
         char line[30];
-        //f2.clear(); // clear the failbit after getline() fails
-        f2.seekg(0, ios::beg); // reset the file pointer to the beginning
-        flag = false; // reset the flag for each loop iteration
-        while (f2.getline(line, 30)) {
+        f2.clear();
+        f2.seekg(0, ios::beg);
+        flag = false;
+        while (f2.getline(line, '\n')) {
             if (strcmp(data, line) == 0) {
                 flag = true;
-                gotoXY(85, 47);  cout << "ERROR: File name already exists. Please choose another name.";
-                break; // exit the loop early if a match is found
+                clearConsoleLine(SIZE * 2 + 1);
+                gotoXY(35, SIZE * 2 + 3);
+                cout << "ERROR: File name already exists. Please choose another name.\n";
+                break;
             }
+            else   clearConsoleLine(SIZE * 2 + 3);
         }
-    } while (flag);
-
+    } while (flag == true);
     f2.close();
-    //
-
+    f2.open("Name.txt", ios::app);
+    f2 << data << endl;
+    f2.close();
 
     ofstream f1;
     f1.open(data, ios::out);
-    f2.open("Name.txt", ios::app);
-    f2 << data << " " << endl;
-    //thong tin
-    f1 << a.score1 << " " << a.score2 << " " << n << endl;
-    for (int i = 0; i < 16; i++)
-    {
-        for (int j = 0; j < 16; j++)
-        {
-            f1 << get_Check(i, j) << " ";
-        }
-        f1 << endl;
-    }
+    f1 << a.score1 << " " << a.score2 <<" "<< n << endl;
     f1.close();
-    f2.close();
+
 
     gotoXY(35, SIZE * 2 + 2);
     cout << "ESC : BACK";
