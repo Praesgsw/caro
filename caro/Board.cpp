@@ -82,12 +82,10 @@ void PrintScoreBoard()
     Textcolor(Black);
     gotoXY(SIZE * 4 + 31, 33);
     cout << "-----------------------";
-    gotoXY(SIZE * 4 + 30, 35);
-    cout << " W A S D : Move ";
     gotoXY(SIZE * 4 + 30, 36);
-    cout << " G : Save Game ";
+    cout << " L : Save Game ";
     gotoXY(SIZE * 4 + 30, 37);
-    cout << " L : Load Game ";
+    cout << " T : Load Game ";
     gotoXY(SIZE * 4 + 30, 38);
     cout << " ESC : Exit ";
 
@@ -244,12 +242,13 @@ void box()
     cout << "ESC : BACK";
 }
 void LoadingGame()
-{   
-    AnTroChuot();
+{
+    hideCur();
     fstream file;
     string line;
     for (int l = 0; l < 10; l++)
     {
+        
         int x = 30, y = 10;
         file.open("Loading.txt", ios::in);
         while (!file.eof()) {
@@ -310,5 +309,6 @@ void LoadingGame()
         }
         file.close();
     }
-    ClearConsole();
+    
+    clearConsole();
 }
