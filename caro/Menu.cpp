@@ -292,11 +292,43 @@ void Load()
     Draw(0, 10, 1);
     readNameFile();
     char data[30];
-    gotoXY(58, 32);
-    showCur();
+
+    int y = 31;
     Textcolor(Red);
-    cout << "ENTER FILE NAME: ";
-    cin.getline(data, 30);
+    gotoXY(60, 38);  cout << "S";
+    Textcolor(Red);
+    gotoXY(68, 38);
+    cout << " : BACK";
+    Textcolor(Red);
+    gotoXY(60, 39);  cout << "Y";
+    Textcolor(Red);
+    gotoXY(68, 39);
+    cout << " : CONTINUE";
+    do {
+        int input = getConsoleInput();
+        if (input == 5 || input == 1)
+        {
+            y++;
+            if (y == 32)
+            {
+                clearConsole();
+                menu();
+            }
+            break;
+        }
+        if (input == 11) {
+            clearConsoleLine(38);
+            clearConsoleLine(39);
+            gotoXY(58, 32);
+            showCur();
+            Textcolor(Red);
+            cout << "ENTER FILE NAME: ";
+            cin.getline(data, 30);
+            break;
+        }
+    } while (input != 5 && input != 1 && input != 11);
+    
+    
     int chedo = readMode(data);
     cout << chedo << endl;
     if (chedo == -30 || chedo == -31)
@@ -323,7 +355,6 @@ void Load()
             menu();
         }
     }
-
 }
 void menu()
 {
